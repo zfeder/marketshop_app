@@ -3,16 +3,4 @@
 Application that, by framing the barcode on a product, returns the closest supermarket based on the position of the product on offer.
 The development takes place through the Flutter framework and is based on the Firebase database
 
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+https://www.google.com/url?sa=i&url=https%3A%2F%2Fit.m.wikipedia.org%2Fwiki%2FFile%3AGoogle-flutter-logo.svg&psig=AOvVaw0fzSvnzzv7cABpJdaUKPBY&ust=1679005051082000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCKjRkK_73v0CFQAAAAAdAAAAABAE
