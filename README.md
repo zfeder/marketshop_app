@@ -1,6 +1,6 @@
-# marketshop_app
+# MarketShop Application
 
-Application for market
+Application that, by framing the barcode on a product, returns the closest supermarket based on the position of the product on offer 
 
 ## Getting Started
 
