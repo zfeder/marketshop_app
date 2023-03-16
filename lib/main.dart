@@ -28,9 +28,17 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   static const TextStyle optionStyle =
   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
-    ListTile(
-          title: const Text('Item 1'),
+    Padding(
+        padding: EdgeInsets.all(16),
+        child: TextField(
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8))
+            ),
+            labelText: 'Username',
+          ),
         ),
+    ),
     Text(
       'Index 1: Market Vicini',
       style: optionStyle,
