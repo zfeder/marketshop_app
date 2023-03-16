@@ -28,10 +28,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   static const TextStyle optionStyle =
   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: ACCOUNT',
-      style: optionStyle,
-    ),
+    ListTile(
+          title: const Text('Item 1'),
+        ),
     Text(
       'Index 1: Market Vicini',
       style: optionStyle,
@@ -40,7 +39,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       'Index : Lista Prodotti',
       style: optionStyle,
     ),
-
+    Text(
+      'Index : Lista Prodotti',
+      style: optionStyle,
+    ),
   ];
 
   void _onItemTapped(int index) {
@@ -52,6 +54,42 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+        // Add a ListView to the drawer. This ensures the user can scroll
+        // through the options in the drawer if there isn't enough vertical
+        // space to fit everything.
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'INPUT',
+                ),
+              ),
+            ),
+            ListTile(
+              title: const Text('Item 1'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+              },
+            ),
+            ListTile(
+              title: const Text('Item 2'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+              },
+            ),
+          ],
+        ),
+      ),
       appBar: AppBar(
         title: const Text('BottomNavigationBar Sample'),
       ),
@@ -62,7 +100,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'ACCOUNT',
+            label: 'HOME',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.room),
@@ -72,9 +110,14 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             icon: Icon(Icons.school),
             label: 'Lista Prodotti',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle),
+            label: 'Account',
+          ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.amber[800],
+        unselectedItemColor: Colors.grey[800],
         onTap: _onItemTapped,
       ),
     );
