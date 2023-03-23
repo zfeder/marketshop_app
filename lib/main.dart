@@ -52,7 +52,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       borderRadius: BorderRadius.all(Radius.circular(8))
                   ),
                   labelText: 'Password',
-                  icon: Icon(Icons.account_box),
+                  icon: Icon(Icons.visibility_off),
                 ),
               ),
             ),
@@ -72,7 +72,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     ),
 
     const Text(
-      'Index : Lista Prodotti',
+      'Index : UserName',
       style: optionStyle,
     ),
 
