@@ -27,31 +27,57 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Padding(
-        padding: EdgeInsets.all(16),
-        child: TextField(
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8))
+  static final List<Widget> _widgetOptions = <Widget>[
+     Scaffold(
+      body: Center(
+        child: Column(
+          children: const [
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8))
+                  ),
+                  labelText: 'Username',
+                  icon: Icon(Icons.account_box),
+                ),
+              ),
             ),
-            labelText: 'Username',
-          ),
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8))
+                  ),
+                  labelText: 'Password',
+                  icon: Icon(Icons.account_box),
+                ),
+              ),
+            ),
+          ],
         ),
-    ),
-    Text(
+        ),
+      ),
+
+    const Text(
       'Index 1: Market Vicini',
       style: optionStyle,
     ),
-    Text(
+
+    const Text(
       'Index : Lista Prodotti',
       style: optionStyle,
     ),
-    Text(
+
+    const Text(
       'Index : Lista Prodotti',
       style: optionStyle,
     ),
+
   ];
+
 
   void _onItemTapped(int index) {
     setState(() {
