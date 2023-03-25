@@ -60,10 +60,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               padding: const EdgeInsets.all(16),
               child: TextButton(
                 style: TextButton.styleFrom(
-                  textStyle: const TextStyle(fontSize: 20),
-                  backgroundColor: Colors.blue,
+                    side: const BorderSide(width: 1.0),
+                    textStyle: const TextStyle(fontSize: 15),
+                  backgroundColor: Colors.white,
                   shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(16)),
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
                   )
                 ),
                   onPressed: () {},
