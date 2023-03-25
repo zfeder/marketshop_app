@@ -61,6 +61,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               child: TextButton(
                 style: TextButton.styleFrom(
                   textStyle: const TextStyle(fontSize: 20),
+                  backgroundColor: Colors.blue,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(16)),
+                  )
                 ),
                   onPressed: () {},
                   child: const Text('Login'),
