@@ -77,16 +77,24 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       ),
 
     ListView(
-      children: const <Widget>[
+      children: <Widget>[
         TextButton(
+            style: TextButton.styleFrom(
+                side: const BorderSide(width: 1.0),
+                textStyle: const TextStyle(fontSize: 15),
+                backgroundColor: Colors.white,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                )
+            ),
             onPressed: null,
             child: Text('Button'),
         ),
-        ListTile(
+        const ListTile(
           leading: Icon(Icons.photo_album),
           title: Text('Album'),
         ),
-        ListTile(
+        const ListTile(
           leading: Icon(Icons.phone),
           title: Text('Phone'),
         ),
