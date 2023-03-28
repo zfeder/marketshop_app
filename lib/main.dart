@@ -76,9 +76,21 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         ),
       ),
 
-    const Text(
-      'Index 1: Market Vicini',
-      style: optionStyle,
+    ListView(
+      children: const <Widget>[
+        ListTile(
+          leading: Icon(Icons.map),
+          title: Text('Map'),
+        ),
+        ListTile(
+          leading: Icon(Icons.photo_album),
+          title: Text('Album'),
+        ),
+        ListTile(
+          leading: Icon(Icons.phone),
+          title: Text('Phone'),
+        ),
+      ],
     ),
 
     const Text(
