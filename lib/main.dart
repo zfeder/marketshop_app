@@ -78,9 +78,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
     ListView(
       children: const <Widget>[
-        ListTile(
-          leading: Icon(Icons.map),
-          title: Text('Map'),
+        TextButton(
+            onPressed: null,
+            child: Text('Button'),
         ),
         ListTile(
           leading: Icon(Icons.photo_album),
