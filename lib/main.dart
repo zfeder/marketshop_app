@@ -87,16 +87,32 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                 )
             ),
-            onPressed: null,
-            child: Text('Button'),
+            onPressed: () {},
+            child: const Text('Button 1'),
         ),
-        const ListTile(
-          leading: Icon(Icons.photo_album),
-          title: Text('Album'),
+        TextButton(
+          style: TextButton.styleFrom(
+              side: const BorderSide(width: 1.0),
+              textStyle: const TextStyle(fontSize: 15),
+              backgroundColor: Colors.white,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              )
+          ),
+          onPressed: () {},
+          child: const Text('Button 2'),
         ),
-        const ListTile(
-          leading: Icon(Icons.phone),
-          title: Text('Phone'),
+        TextButton(
+          style: TextButton.styleFrom(
+              side: const BorderSide(width: 1.0),
+              textStyle: const TextStyle(fontSize: 15),
+              backgroundColor: Colors.white,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              )
+          ),
+          onPressed: () {},
+          child: const Text('Button 3'),
         ),
       ],
     ),
