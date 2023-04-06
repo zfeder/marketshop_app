@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "464372108399",
+    "firebase_url": "https://marketshopapp-b54f9-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "marketshopapp-b54f9",
     "storage_bucket": "marketshopapp-b54f9.appspot.com"
   },
@@ -29,6 +30,13 @@
             {
               "client_id": "464372108399-dar1f55igaiiap68nfh82f4c3se6ndpv.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "464372108399-9rvfagpbiecokoefkk4r6lsqjosaqqcj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.marketshopApp"
+              }
             }
           ]
         }
