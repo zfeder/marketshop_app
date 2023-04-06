@@ -1,18 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
 
-
-void main() async {
-
-  runApp(const MyApp());
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-}
-
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -21,7 +9,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return const MaterialApp(
       title: _title,
       home: MyStatefulWidget(),
@@ -57,7 +44,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 ),
               ),
             ),
-            const Padding(
+          const Padding(
               padding: EdgeInsets.all(16),
               child: TextField(
                 decoration: InputDecoration(
@@ -72,62 +59,21 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             Padding(
               padding: const EdgeInsets.all(16),
               child: TextButton(
-                style: TextButton.styleFrom(
-                    side: const BorderSide(width: 1.0),
-                    textStyle: const TextStyle(fontSize: 15),
-                  backgroundColor: Colors.white,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  )
+                style: ButtonStyle(
+                  foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
                 ),
-                  onPressed: () {},
-                  child: const Text('Login'),
-              ),
+                onPressed: () { },
+                child: const Text('TextButton'),
+              )
             ),
           ],
         ),
         ),
       ),
 
-    ListView(
-      children: <Widget>[
-        TextButton(
-            style: TextButton.styleFrom(
-                side: const BorderSide(width: 1.0),
-                textStyle: const TextStyle(fontSize: 15),
-                backgroundColor: Colors.white,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                )
-            ),
-            onPressed: () {},
-            child: const Text('Button 1'),
-        ),
-        TextButton(
-          style: TextButton.styleFrom(
-              side: const BorderSide(width: 1.0),
-              textStyle: const TextStyle(fontSize: 15),
-              backgroundColor: Colors.white,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-              )
-          ),
-          onPressed: () {},
-          child: const Text('Button 2'),
-        ),
-        TextButton(
-          style: TextButton.styleFrom(
-              side: const BorderSide(width: 1.0),
-              textStyle: const TextStyle(fontSize: 15),
-              backgroundColor: Colors.white,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-              )
-          ),
-          onPressed: () {},
-          child: const Text('Button 3'),
-        ),
-      ],
+    const Text(
+      'Index 1: Market Vicini',
+      style: optionStyle,
     ),
 
     const Text(
