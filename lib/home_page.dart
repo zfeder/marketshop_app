@@ -1,34 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() => runApp(const MyApp());
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  static const String _title = 'Flutter Code Sample';
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: _title,
-      home: MyStatefulWidget(),
-    );
-  }
-}
-
-class MyStatefulWidget extends StatefulWidget {
-  const MyStatefulWidget({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
+  State<HomePage> createState() => _HomePage();
 }
 
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+class _HomePage extends State<HomePage> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static final List<Widget> _widgetOptions = <Widget>[
-     Scaffold(
+    Scaffold(
       body: Center(
         child: Column(
           children: [
@@ -44,7 +32,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 ),
               ),
             ),
-          const Padding(
+            const Padding(
               padding: EdgeInsets.all(16),
               child: TextField(
                 decoration: InputDecoration(
@@ -59,21 +47,62 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             Padding(
               padding: const EdgeInsets.all(16),
               child: TextButton(
-                style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                style: TextButton.styleFrom(
+                    side: const BorderSide(width: 1.0),
+                    textStyle: const TextStyle(fontSize: 15),
+                    backgroundColor: Colors.white,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    )
                 ),
-                onPressed: () { },
-                child: const Text('TextButton'),
-              )
+                onPressed: () {},
+                child: const Text('Login'),
+              ),
             ),
           ],
         ),
-        ),
       ),
+    ),
 
-    const Text(
-      'Index 1: Market Vicini',
-      style: optionStyle,
+    ListView(
+      children: <Widget>[
+        TextButton(
+          style: TextButton.styleFrom(
+              side: const BorderSide(width: 1.0),
+              textStyle: const TextStyle(fontSize: 15),
+              backgroundColor: Colors.white,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              )
+          ),
+          onPressed: () {},
+          child: const Text('Button 1'),
+        ),
+        TextButton(
+          style: TextButton.styleFrom(
+              side: const BorderSide(width: 1.0),
+              textStyle: const TextStyle(fontSize: 15),
+              backgroundColor: Colors.white,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              )
+          ),
+          onPressed: () {},
+          child: const Text('Button 2'),
+        ),
+        TextButton(
+          style: TextButton.styleFrom(
+              side: const BorderSide(width: 1.0),
+              textStyle: const TextStyle(fontSize: 15),
+              backgroundColor: Colors.white,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              )
+          ),
+          onPressed: () {},
+          child: const Text('Button 3'),
+        ),
+      ],
     ),
 
     const Text(
@@ -166,5 +195,5 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       ),
     );
   }
-  // prova commit
+// prova commit
 }
