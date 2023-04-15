@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -9,6 +10,10 @@ class HomePage extends StatefulWidget {
 
   @override
   State<HomePage> createState() => _HomePage();
+}
+
+void signUserOut() {
+  FirebaseAuth.instance.signOut();
 }
 
 class _HomePage extends State<HomePage> {
@@ -110,12 +115,13 @@ class _HomePage extends State<HomePage> {
       style: optionStyle,
     ),
 
-    const Text(
-      'Index : UserName',
-      style: optionStyle,
-    ),
+    const IconButton(
+        onPressed: signUserOut,
+        icon: Icon(Icons.logout),
+    )
 
   ];
+
 
 
   void _onItemTapped(int index) {
