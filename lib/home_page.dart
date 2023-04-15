@@ -2,7 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:marketshop_app/account_page.dart';
+import 'package:marketshop_app/bottom_navigation_bar/account_bar.dart';
+import 'package:marketshop_app/bottom_navigation_bar/home_bar.dart';
+import 'package:marketshop_app/bottom_navigation_bar/item_bar.dart';
+import 'package:marketshop_app/bottom_navigation_bar/store_market_bar.dart';
 import 'firebase_options.dart';
 
 
@@ -18,103 +21,14 @@ class _HomePage extends State<HomePage> {
   static const TextStyle optionStyle =
   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static final List<Widget> _widgetOptions = <Widget>[
-    Scaffold(
-      body: Center(
-        child: Column(
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(16),
-              child: TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(8))
-                  ),
-                  labelText: 'Username',
-                  icon: Icon(Icons.account_box),
-                ),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(16),
-              child: TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(8))
-                  ),
-                  labelText: 'Password',
-                  icon: Icon(Icons.visibility_off),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: TextButton(
-                style: TextButton.styleFrom(
-                    side: const BorderSide(width: 1.0),
-                    textStyle: const TextStyle(fontSize: 15),
-                    backgroundColor: Colors.white,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    )
-                ),
-                onPressed: () {},
-                child: const Text('Login'),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
 
-    ListView(
-      children: <Widget>[
-        TextButton(
-          style: TextButton.styleFrom(
-              side: const BorderSide(width: 1.0),
-              textStyle: const TextStyle(fontSize: 15),
-              backgroundColor: Colors.white,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-              )
-          ),
-          onPressed: () {},
-          child: const Text('Button 1'),
-        ),
-        TextButton(
-          style: TextButton.styleFrom(
-              side: const BorderSide(width: 1.0),
-              textStyle: const TextStyle(fontSize: 15),
-              backgroundColor: Colors.white,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-              )
-          ),
-          onPressed: () {},
-          child: const Text('Button 2'),
-        ),
-        TextButton(
-          style: TextButton.styleFrom(
-              side: const BorderSide(width: 1.0),
-              textStyle: const TextStyle(fontSize: 15),
-              backgroundColor: Colors.white,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-              )
-          ),
-          onPressed: () {},
-          child: const Text('Button 3'),
-        ),
-      ],
-    ),
+    const HomeBar(),
 
-    const Text(
-      'Index : Lista Prodotti',
-      style: optionStyle,
-    ),
+    const StoreMarketBar(),
 
-    Container(
+    const ItemBar(),
 
-    ),
+    const AccountBar(),
 
   ];
 
