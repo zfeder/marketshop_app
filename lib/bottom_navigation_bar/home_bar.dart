@@ -59,16 +59,17 @@ class _HomeBar extends State<HomeBar> {
         ],
       ),
       body: MobileScanner(
+        //allowDuplicator: true,
         controller: cameraController,
-        onDetect: (BarcodeCapture barcodes) {  },
+        onDetect: _foundBarcode,
       ),
     );
   }
 
-  void _foundBarcode(Barcode barcode, MobileScannerArguments? args) {
+  void _foundBarcode(BarcodeCapture barcode) {
     /// open screen
     if (!_screenOpened) {
-      final String code = barcode.rawValue ?? "---";
+      final String code = barcode.toString() ?? "---";
       debugPrint('Barcode found! $code');
       _screenOpened = true;
       Navigator.push(context, MaterialPageRoute(builder: (context) =>
