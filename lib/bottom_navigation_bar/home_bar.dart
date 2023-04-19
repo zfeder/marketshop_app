@@ -69,7 +69,7 @@ class _HomeBar extends State<HomeBar> {
   void _foundBarcode(BarcodeCapture barcode) {
     /// open screen
     if (!_screenOpened) {
-      final String code = barcode.toString() ?? "---";
+      final String code = barcode.barcodes[0].rawValue ?? "---";
       debugPrint('Barcode found! $code');
       _screenOpened = true;
       Navigator.push(context, MaterialPageRoute(builder: (context) =>
