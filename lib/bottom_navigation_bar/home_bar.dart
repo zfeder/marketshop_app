@@ -58,6 +58,10 @@ class _HomeBar extends State<HomeBar> {
           ),
         ],
       ),
+      body: MobileScanner(
+        controller: cameraController,
+        onDetect: (BarcodeCapture barcodes) {  },
+      ),
     );
   }
 
