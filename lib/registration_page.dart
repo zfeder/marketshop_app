@@ -1,110 +1,59 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:marketshop_app/bottom_navigation_bar/account_bar.dart';
 import 'package:marketshop_app/bottom_navigation_bar/home_bar.dart';
-import 'package:marketshop_app/home_page.dart';
-import 'package:marketshop_app/registration_page.dart';
-import 'components_login/my_buttonReg.dart';
-import 'dart:developer';
+import 'package:marketshop_app/bottom_navigation_bar/item_bar.dart';
+import 'package:marketshop_app/bottom_navigation_bar/store_market_bar.dart';
+import 'package:marketshop_app/login_page.dart';
 import 'components_login/my_button.dart';
+import 'components_login/my_buttonReg.dart';
 import 'components_login/my_textfield.dart';
+import 'firebase_options.dart';
 
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegPage extends StatefulWidget {
+  const RegPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegPage> createState() => _RegPage();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  // text editing controllers
+class _RegPage extends State<RegPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   // sign user in method
   void signUserIn() async {
-    // show loading circle
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
 
-    // try sign in
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
       );
-      // pop the loading circle
-      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
-      // pop the loading circle
-      Navigator.pop(context);
-      // WRONG EMAIL
-      if (e.code == 'user-not-found') {
-        // show error to user
-        wrongEmailMessage();
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
       }
-
-      // WRONG PASSWORD
-      else if (e.code == 'wrong-password') {
-        // show error to user
-        wrongPasswordMessage();
-      }
+    } catch (e) {
+      print(e);
     }
   }
 
-  void regPage() async {
+  void LogPage() async {
     showDialog(
       context: context,
       builder: (context) {
         return const Center(
-          child: RegPage(),
-        );
-      },
-    );
-    }
-
-
-  // wrong email message popup
-  void wrongEmailMessage() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const AlertDialog(
-          backgroundColor: Colors.deepPurple,
-          title: Center(
-            child: Text(
-              'Incorrect Email',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
+          child: LoginPage(),
         );
       },
     );
   }
 
-  // wrong password message popup
-  void wrongPasswordMessage() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const AlertDialog(
-          backgroundColor: Colors.deepPurple,
-          title: Center(
-            child: Text(
-              'Incorrect Password',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
 
               // logo
               const Icon(
-                Icons.lock,
+                Icons.account_circle,
                 size: 100,
               ),
 
@@ -127,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
 
               // welcome back, you've been missed!
               Text(
-                'Welcome back you\'ve been missed!',
+                'Welcome new User!',
                 style: TextStyle(
                   color: Colors.grey[700],
                   fontSize: 16,
@@ -155,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 25),
 
               // sign in button
-              MyButton(
+              MyButtonReg(
                 onTap: signUserIn,
               ),
 
@@ -201,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(width: 25),
 
                   // apple button
-                
+
                 ],
               ),
 
@@ -212,12 +161,12 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Not a member?',
+                    'Already a member?',
                     style: TextStyle(color: Colors.grey[700]),
                   ),
                   const SizedBox(width: 4),
-                  MyButtonReg(
-                    onTap: regPage,
+                  MyButton(
+                    onTap: LogPage,
                   ),
                 ],
               )
@@ -227,5 +176,5 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
+// prova commit
 }
