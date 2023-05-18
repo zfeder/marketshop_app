@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:marketshop_app/auth_page.dart';
 import 'package:marketshop_app/bottom_navigation_bar/account_bar.dart';
 import 'package:marketshop_app/bottom_navigation_bar/home_bar.dart';
 import 'package:marketshop_app/bottom_navigation_bar/item_bar.dart';
@@ -32,6 +33,7 @@ class _RegPage extends State<RegPage> {
         email: emailController.text,
         password: passwordController.text,
       );
+      AutPage();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
@@ -53,6 +55,18 @@ class _RegPage extends State<RegPage> {
       },
     );
   }
+
+  void AutPage() async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const Center(
+          child: AuthPage(),
+        );
+      },
+    );
+  }
+
 
 
   @override
