@@ -140,8 +140,6 @@ class _LoginPageState extends State<LoginPage> {
                 obscureText: false,
               ),
 
-              const SizedBox(height: 10),
-
               // password textfield
               MyTextField(
                 controller: passwordController,

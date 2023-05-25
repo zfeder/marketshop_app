@@ -95,6 +95,7 @@ class _RegPage extends State<RegPage> {
                 ),
               ),
 
+              const SizedBox(height: 25),
 
               // email textfield
               MyTextField(
