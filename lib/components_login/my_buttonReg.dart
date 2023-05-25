@@ -18,7 +18,7 @@ class MyButtonReg extends StatelessWidget {
         ),
         child: const Center(
           child: Text(
-            "Cerca",
+            "Registrati",
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,

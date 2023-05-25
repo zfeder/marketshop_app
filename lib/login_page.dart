@@ -115,15 +115,12 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 50),
 
               // logo
               const Icon(
                 Icons.lock,
                 size: 100,
               ),
-
-              const SizedBox(height: 50),
 
               // welcome back, you've been missed!
               Text(
@@ -152,14 +149,10 @@ class _LoginPageState extends State<LoginPage> {
                 obscureText: true,
               ),
 
-              const SizedBox(height: 25),
-
               // sign in button
               MyButton(
                 onTap: signUserIn,
               ),
-
-              const SizedBox(height: 50),
 
               // or continue with
               Padding(
@@ -189,24 +182,11 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
 
-              const SizedBox(height: 50),
 
               // google + apple sign in buttons
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  // google button
-
-
-                  SizedBox(width: 25),
-
-                  // apple button
-                
-                ],
               ),
-
-              const SizedBox(height: 50),
-
               // not a member? register now
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -215,7 +195,6 @@ class _LoginPageState extends State<LoginPage> {
                     'Not a member?',
                     style: TextStyle(color: Colors.grey[700]),
                   ),
-                  const SizedBox(width: 4),
                   MyButtonReg(
                     onTap: regPage,
                   ),

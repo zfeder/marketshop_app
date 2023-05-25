@@ -78,7 +78,6 @@ class _RegPage extends State<RegPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 50),
 
               // logo
               const Icon(
@@ -86,7 +85,6 @@ class _RegPage extends State<RegPage> {
                 size: 100,
               ),
 
-              const SizedBox(height: 50),
 
               // welcome back, you've been missed!
               Text(
@@ -97,7 +95,6 @@ class _RegPage extends State<RegPage> {
                 ),
               ),
 
-              const SizedBox(height: 25),
 
               // email textfield
               MyTextField(
@@ -106,7 +103,6 @@ class _RegPage extends State<RegPage> {
                 obscureText: false,
               ),
 
-              const SizedBox(height: 10),
 
               // password textfield
               MyTextField(
@@ -115,14 +111,12 @@ class _RegPage extends State<RegPage> {
                 obscureText: true,
               ),
 
-              const SizedBox(height: 25),
 
               // sign in button
               MyButtonReg(
                 onTap: signUserIn,
               ),
 
-              const SizedBox(height: 50),
 
               // or continue with
               Padding(
@@ -152,23 +146,20 @@ class _RegPage extends State<RegPage> {
                 ),
               ),
 
-              const SizedBox(height: 50),
 
               // google + apple sign in buttons
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   // google button
 
 
-                  SizedBox(width: 25),
 
                   // apple button
 
                 ],
               ),
 
-              const SizedBox(height: 50),
 
               // not a member? register now
               Row(
@@ -178,7 +169,6 @@ class _RegPage extends State<RegPage> {
                     'Already a member?',
                     style: TextStyle(color: Colors.grey[700]),
                   ),
-                  const SizedBox(width: 4),
                   MyButton(
                     onTap: LogPage,
                   ),
