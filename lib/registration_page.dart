@@ -129,6 +129,7 @@ class _RegPage extends State<RegPage> {
                         color: Colors.grey[400],
                       ),
                     ),
+                    const SizedBox(height:50),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10.0),
                       child: Text(
@@ -145,23 +146,10 @@ class _RegPage extends State<RegPage> {
                   ],
                 ),
               ),
-
-
-              // google + apple sign in buttons
               const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // google button
-
-
-
-                  // apple button
-
-                ],
               ),
 
-
-              // not a member? register now
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
