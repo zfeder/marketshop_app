@@ -23,14 +23,6 @@ class _ItemBarState extends State<ItemBar> {
   late EmployeeDataSource employeeDataSource;
   bool isLoading = true;
 
-  @override
-  void initState() {
-    super.initState();
-    employees = [];
-    employeeDataSource = EmployeeDataSource(employeeData: employees);
-    getDataFromDatabase("");
-  }
-
   void signUserOut() {
     FirebaseDatabase.instance.ref().child("users").push().set({
       "name": "Fedeeeeee",
@@ -39,16 +31,8 @@ class _ItemBarState extends State<ItemBar> {
     log('SONO DENTROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO');
   }
 
-  void cercaDb() {
-    String cerca = itemController.text;
-    setState(() {
-      isLoading = true;
-      employees.clear();
-    });
-    getDataFromDatabase(cerca);
-  }
 
-  Future<void> getDataFromDatabase(String cerca) async {
+  Future<void> getDataFromDatabase() async {
     var value = FirebaseDatabase.instance.ref();
     var getValue = await value.child('barcode/employee').once();
     dynamic showData = getValue.snapshot.value;
@@ -93,12 +77,12 @@ class _ItemBarState extends State<ItemBar> {
                 obscureText: false,
               ),
               ElevatedButton(
-                onPressed: cercaDb,
+                onPressed: getDataFromDatabase,
                 child: const Text('Cerca'),
               ),
               SizedBox(height: 20),
               if (isLoading)
-                CircularProgressIndicator()
+                const Expanded(child:  Text('prova'))
               else
                 Expanded(
                   child: SfDataGrid(
