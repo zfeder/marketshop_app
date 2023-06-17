@@ -30,13 +30,6 @@ class _ItemBarState extends State<ItemBar> {
   bool isLoading = true;
   String data = '';
 
-  void signUserOut() {
-    FirebaseDatabase.instance.ref().child("users").push().set({
-      "name": "Fedeeeeee",
-      "age": 1
-    });
-  }
-
   Future<void> getDataFromDatabase() async {
     var value = FirebaseDatabase.instance.ref();
     String barcode = 'barcode/';
@@ -75,7 +68,7 @@ class _ItemBarState extends State<ItemBar> {
     log("args ${args.data}");
   }
 
-  
+
 
   @override
   Widget build(BuildContext context) {

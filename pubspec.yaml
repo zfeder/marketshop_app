@@ -49,6 +49,7 @@ dependencies:
   collection: ^1.16.0
   http: ^1.0.0
   geolocator: ^9.0.2
+  permission_handler: ^10.3.0
 
 dev_dependencies:
   flutter_test:

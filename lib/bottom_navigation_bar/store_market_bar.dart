@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'api_service.dart';
 import 'package:geolocator/geolocator.dart';
 
 void main() {
@@ -14,7 +13,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Supermercati Vicini',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -39,6 +37,7 @@ class _SupermarketListState extends State<SupermarketList> {
     getCurrentLocation();
   }
 
+  // Ottiene la posizione attuale dell'utente
   void getCurrentLocation() async {
     try {
       Position position = await Geolocator.getCurrentPosition(
@@ -48,7 +47,25 @@ class _SupermarketListState extends State<SupermarketList> {
       double lat = position.latitude;
       double lng = position.longitude;
 
+      setState(() {
+        supermarkets = []; // Svuota la lista dei supermercati
+      });
+
       List<dynamic> fetchedSupermarkets = await fetchSupermarkets(lat, lng);
+
+      // Calcola la distanza tra la tua posizione e la posizione dei supermercati
+      for (var supermarket in fetchedSupermarkets) {
+        double distance = Geolocator.distanceBetween(
+          lat,
+          lng,
+          supermarket['geometry']['location']['lat'],
+          supermarket['geometry']['location']['lng'],
+        );
+        // Aggiungi la distanza al supermercato
+        supermarket['distance'] = distance;
+      }
+
+      fetchedSupermarkets.sort((a, b) => a['distance'].compareTo(b['distance'])); // Ordina la lista per distanza
 
       setState(() {
         supermarkets = fetchedSupermarkets;
@@ -68,10 +85,34 @@ class _SupermarketListState extends State<SupermarketList> {
         itemCount: supermarkets.length,
         itemBuilder: (context, index) {
           final supermarket = supermarkets[index];
-          return ListTile(
-            title: Text(supermarket['name']),
-            subtitle: Text(supermarket['vicinity']),
-            trailing: Text('${supermarket['rating']}'),
+          final distanceInMeters = supermarket['distance'];
+
+          String distanceText;
+          if (distanceInMeters < 1000) {
+            distanceText = '${distanceInMeters.toStringAsFixed(0)} m';
+          } else {
+            final distanceInKm = distanceInMeters / 1000;
+            distanceText = '${distanceInKm.toStringAsFixed(1)} km';
+          }
+
+          return InkWell(
+            onTap: () {
+              // Esegui azioni quando l'elemento viene cliccato
+              print('Hai cliccato su ${supermarket['name']}');
+            },
+            child: ListTile(
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(supermarket['name']),
+                  Text(
+                    supermarket['vicinity'],
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+              trailing: Text(distanceText),
+            ),
           );
         },
       ),
@@ -79,11 +120,12 @@ class _SupermarketListState extends State<SupermarketList> {
   }
 }
 
+// Effettua la richiesta API per ottenere la lista dei supermercati nelle vicinanze
 Future<List<dynamic>> fetchSupermarkets(double lat, double lng) async {
-  const apiKey = 'AIzaSyCKaqCw4qaOftjTRAZshAoihVZDJiDeYMI'; // Sostituisci con la tua API key di Google Places
+  const apiKey = 'AIzaSyCKaqCw4qaOftjTRAZshAoihVZDJiDeYMI'; // Sostituisci con la tua chiave API di Google Places
 
   final url =
-      'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$lat,$lng&radius=5000&type=supermarket&key=$apiKey';
+      'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$lat,$lng&radius=2000&type=supermarket&key=$apiKey';
 
   final response = await http.get(Uri.parse(url));
 
