@@ -67,19 +67,14 @@ class _HomeBar extends State<HomeBar> {
   }
 
   void _foundBarcode(BarcodeCapture barcode) {
-    /// open screen
     if (!_screenOpened) {
       final String code = barcode.barcodes[0].rawValue ?? "---";
       debugPrint('Barcode found! $code');
       _screenOpened = true;
-      Navigator.push(context, MaterialPageRoute(builder: (context) =>
-          FoundCodeScreen(screenClosed: _screenWasClosed, value: code),));
+      Navigator.pop(context, code);
     }
   }
 
-  void _screenWasClosed() {
-    _screenOpened = false;
-  }
 }
 
 class FoundCodeScreen extends StatefulWidget {
@@ -100,25 +95,25 @@ class _FoundCodeScreenState extends State<FoundCodeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Found Code"),
+        title: const Text("Found Code"),
         centerTitle: true,
         leading: IconButton(
           onPressed: () {
             widget.screenClosed();
             Navigator.pop(context);
           },
-          icon: Icon(Icons.arrow_back_outlined,),
+          icon: const Icon(Icons.arrow_back_outlined,),
         ),
       ),
       body: Center(
         child: Padding(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("Scanned Code:", style: TextStyle(fontSize: 20,),),
-              SizedBox(height: 20,),
-              Text(widget.value, style: TextStyle(fontSize: 16,),),
+              const Text("Scanned Code:", style: TextStyle(fontSize: 20,),),
+              const SizedBox(height: 20,),
+              Text(widget.value, style: const TextStyle(fontSize: 16,),),
             ],
           ),
         ),
