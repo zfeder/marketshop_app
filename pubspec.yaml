@@ -45,6 +45,7 @@ dependencies:
   location: ^4.4.0
   syncfusion_flutter_datagrid: ^21.2.5
   collection: ^1.16.0
+  http: ^1.0.0
 
 dev_dependencies:
   flutter_test:

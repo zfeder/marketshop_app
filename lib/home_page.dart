@@ -23,7 +23,7 @@ class _HomePage extends State<HomePage> {
   static final List<Widget> _widgetOptions = <Widget>[
 
 
-    const StoreMarketBar(),
+    SupermarketList(),
 
     const ItemBar(''),
 
