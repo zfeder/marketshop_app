@@ -5,18 +5,18 @@ import 'package:firebase_core/firebase_core.dart';
 import '../firebase_options.dart';
 
 
-class AccountBar extends StatefulWidget {
-  const AccountBar({super.key});
+class AccountSettings extends StatefulWidget {
+  const AccountSettings({super.key});
 
   @override
-  State<AccountBar> createState() => _AccountBar();
+  State<AccountSettings> createState() => _AccountSettings();
 }
 
 void signUserOut() {
   FirebaseAuth.instance.signOut();
 }
 
-class _AccountBar extends State<AccountBar> {
+class _AccountSettings extends State<AccountSettings> {
   @override
   Widget build(BuildContext context) {
     return Container(

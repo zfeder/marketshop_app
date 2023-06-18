@@ -2,10 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:marketshop_app/bottom_navigation_bar/account_bar.dart';
-import 'package:marketshop_app/bottom_navigation_bar/home_bar.dart';
+import 'package:marketshop_app/bottom_navigation_bar/account_settings.dart';
+import 'package:marketshop_app/bottom_navigation_bar/scanner_code.dart';
 import 'package:marketshop_app/bottom_navigation_bar/item_bar.dart';
-import 'package:marketshop_app/bottom_navigation_bar/store_market_bar.dart';
+import 'package:marketshop_app/bottom_navigation_bar/store_market_list.dart';
 import 'firebase_options.dart';
 
 
@@ -25,9 +25,9 @@ class _HomePage extends State<HomePage> {
 
     SupermarketList(),
 
-    const ItemBar(''),
+    const ItemBar(dataBarcode: ''),
 
-    const AccountBar(),
+    const AccountSettings(),
 
   ];
 

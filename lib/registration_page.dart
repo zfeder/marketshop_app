@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:marketshop_app/auth_page.dart';
-import 'package:marketshop_app/bottom_navigation_bar/account_bar.dart';
-import 'package:marketshop_app/bottom_navigation_bar/home_bar.dart';
+import 'package:marketshop_app/bottom_navigation_bar/account_settings.dart';
+import 'package:marketshop_app/bottom_navigation_bar/scanner_code.dart';
 import 'package:marketshop_app/bottom_navigation_bar/item_bar.dart';
-import 'package:marketshop_app/bottom_navigation_bar/store_market_bar.dart';
+import 'package:marketshop_app/bottom_navigation_bar/store_market_list.dart';
 import 'package:marketshop_app/login_page.dart';
-import 'components_login/my_button.dart';
-import 'components_login/my_buttonReg.dart';
-import 'components_login/my_textfield.dart';
+import 'components_login/button.dart';
+import 'components_login/button_register.dart';
+import 'components_login/button_textfield.dart';
 import 'firebase_options.dart';
 
 

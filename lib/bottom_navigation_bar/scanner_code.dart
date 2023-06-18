@@ -7,14 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 
-class HomeBar extends StatefulWidget {
-  const HomeBar({Key? key}) : super(key: key);
+class ScannerCode extends StatefulWidget {
+  const ScannerCode({Key? key}) : super(key: key);
 
   @override
-  State<HomeBar> createState() => _HomeBar();
+  State<ScannerCode> createState() => _ScannerCode();
 }
 
-class _HomeBar extends State<HomeBar> {
+class _ScannerCode extends State<ScannerCode> {
   MobileScannerController cameraController = MobileScannerController();
   bool _screenOpened = false;
 

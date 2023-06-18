@@ -1,23 +1,15 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:syncfusion_flutter_datagrid/datagrid.dart';
-import '../prodotto.dart';
-import '../components_login/my_buttonAddCode.dart';
-import '../components_login/my_buttonReg.dart';
-import '../components_login/my_textfield.dart';
-import '../firebase_options.dart';
-import 'dart:developer';
-import 'package:marketshop_app/bottom_navigation_bar/home_bar.dart';
-
-import '../registration_page.dart';
+import 'package:marketshop_app/bottom_navigation_bar/product_price.dart';
+import '../components_login/button_textfield.dart';
+import 'package:marketshop_app/bottom_navigation_bar/scanner_code.dart';
 
 
 class ItemBar extends StatefulWidget {
-  const ItemBar(String data, {Key? key}) : super(key: key);
+  final Function(String)? onScannerResult;
+  final String dataBarcode;
 
-  get data => null;
+  const ItemBar({required this.dataBarcode, Key? key, this.onScannerResult}) : super(key: key);
 
   @override
   _ItemBarState createState() => _ItemBarState();
@@ -26,9 +18,9 @@ class ItemBar extends StatefulWidget {
 class _ItemBarState extends State<ItemBar> {
   final itemController = TextEditingController();
   late List<Prodotto> prodotto;
-  late EmployeeDataSource employeeDataSource;
   bool isLoading = true;
   String data = '';
+  late Prodotto? selectedProduct;
 
   Future<void> getDataFromDatabase() async {
     var value = FirebaseDatabase.instance.ref();
@@ -50,8 +42,6 @@ class _ItemBarState extends State<ItemBar> {
         );
       }).toList();
 
-      employeeDataSource = EmployeeDataSource(employeeData: prodotto);
-
       setState(() {
         isLoading = false;
       });
@@ -59,16 +49,29 @@ class _ItemBarState extends State<ItemBar> {
   }
 
   void scannerOn() async {
-    final ItemBar args = await Navigator.push(
+    final String? scannedValue = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const HomeBar(),
+        builder: (context) => const ScannerCode(),
       ),
     );
-    log("args ${args.data}");
+    print("*************************************** Valore: $scannedValue");
   }
 
+  void onTap(Prodotto product) {
+    setState(() {
+      selectedProduct = product;
+    });
+    print("Selected Product: ${selectedProduct?.Barcode}");
+    int productBarcode = product.Barcode;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProductPrice(productBarcode),
+      ),
+    );
 
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,102 +82,43 @@ class _ItemBarState extends State<ItemBar> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-                MyTextField(
-                    controller: itemController,
-                    hintText: 'Cerca per nome',
-                    obscureText: false,
-                  ),
-                    ElevatedButton(
-                      onPressed: getDataFromDatabase,
-                      child: const Text('Cerca'),
-                    ),
-                    ElevatedButton(
-                      onPressed: scannerOn,
-                      child: const Text('Scansiona BARCODE'),
-                    ),
+              MyTextField(
+                controller: itemController,
+                hintText: 'Cerca per nome',
+                obscureText: false,
+              ),
+              ElevatedButton(
+                onPressed: getDataFromDatabase,
+                child: const Text('Cerca'),
+              ),
+              ElevatedButton(
+                onPressed: scannerOn,
+                child: const Text('Scansiona BARCODE'),
+              ),
               const SizedBox(height: 20),
               if (isLoading)
-                const Expanded(child:  Text(''))
+                const Expanded(child: Text(''))
               else
                 Expanded(
-                  child: SfDataGrid(
-                    source: employeeDataSource,
-                    columnWidthMode: ColumnWidthMode.fill,
-                    columns: <GridColumn>[
-                      GridColumn(
-                        columnName: 'Barcode',
-                        label: Container(
-                          padding: const EdgeInsets.all(16.0),
-                          alignment: Alignment.center,
-                          child: const Text('ID'),
-                        ),
-                      ),
-                      GridColumn(
-                        columnName: 'name',
-                        label: Container(
-                          padding: const EdgeInsets.all(8.0),
-                          alignment: Alignment.center,
-                          child: const Text('Name'),
-                        ),
-                      ),
-                      GridColumn(
-                        columnName: 'Peso',
-                        label: Container(
-                          padding: const EdgeInsets.all(8.0),
-                          alignment: Alignment.center,
-                          child: const Text(
-                            'Peso',
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ),
-                      GridColumn(
-                        columnName: 'Valutazione',
-                        label: Container(
-                          padding: const EdgeInsets.all(8.0),
-                          alignment: Alignment.center,
-                          child: const Text('Valutazione'),
-                        ),
-                      ),
-                    ],
+                  child: ListView.builder(
+                    itemCount: prodotto.length,
+                    itemBuilder: (context, index) {
+                      final product = prodotto[index];
+                      return ListTile(
+                        onTap: () {
+                          onTap(product);
+                        },
+                        title: Text(product.Nome),
+                        subtitle: Text('Peso: ${product.Peso}'),
+                        trailing: Text('Valutazione: ${product.Valutazione}'),
+                      );
+                    },
                   ),
                 ),
             ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class EmployeeDataSource extends DataGridSource {
-  EmployeeDataSource({required List<Prodotto> employeeData}) {
-    _employeeData = employeeData
-        .map<DataGridRow>((e) => DataGridRow(cells: [
-      DataGridCell<int>(columnName: 'Barcode', value: e.Barcode),
-      DataGridCell<String>(columnName: 'Nome', value: e.Nome),
-      DataGridCell<String>(
-          columnName: 'Peso', value: e.Peso),
-      DataGridCell<int>(columnName: 'Valutazione', value: e.Valutazione),
-    ]))
-        .toList();
-  }
-
-  List<DataGridRow> _employeeData = [];
-
-  @override
-  List<DataGridRow> get rows => _employeeData;
-
-  @override
-  DataGridRowAdapter buildRow(DataGridRow row) {
-    return DataGridRowAdapter(
-      cells: row.getCells().map<Widget>((e) {
-        return Container(
-          alignment: Alignment.center,
-          padding: const EdgeInsets.all(8.0),
-          child: Text(e.value.toString()),
-        );
-      }).toList(),
     );
   }
 }

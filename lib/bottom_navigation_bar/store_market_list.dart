@@ -78,9 +78,6 @@ class _SupermarketListState extends State<SupermarketList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Supermercati Vicini'),
-      ),
       body: ListView.builder(
         itemCount: supermarkets.length,
         itemBuilder: (context, index) {
