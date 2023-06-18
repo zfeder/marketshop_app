@@ -1,13 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:marketshop_app/bottom_navigation_bar/scanner_code.dart';
-import 'package:marketshop_app/home_page.dart';
 import 'package:marketshop_app/registration_page.dart';
 import 'components_login/button_register.dart';
-import 'dart:developer';
 import 'components_login/button.dart';
 import 'components_login/button_textfield.dart';
-
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

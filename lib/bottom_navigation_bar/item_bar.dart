@@ -4,7 +4,6 @@ import 'package:marketshop_app/bottom_navigation_bar/product_price.dart';
 import '../components_login/button_textfield.dart';
 import 'package:marketshop_app/bottom_navigation_bar/scanner_code.dart';
 
-
 class ItemBar extends StatefulWidget {
   final Function(String)? onScannerResult;
   final String dataBarcode;

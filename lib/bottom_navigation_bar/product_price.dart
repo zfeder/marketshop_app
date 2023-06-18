@@ -1,8 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:marketshop_app/bottom_navigation_bar/item_bar.dart';
-import '../components_login/button_textfield.dart';
-import 'package:marketshop_app/bottom_navigation_bar/scanner_code.dart';
 
 class ProductPrice extends StatefulWidget {
   final int productBarcode;
