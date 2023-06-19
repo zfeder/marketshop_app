@@ -54,7 +54,13 @@ class _ItemBarState extends State<ItemBar> {
         builder: (context) => const ScannerCode(),
       ),
     );
-    print("*************************************** Valore: $scannedValue");
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProductPrice(int.parse(scannedValue!)),
+      ),
+    );
   }
 
   void onTap(Prodotto product) {

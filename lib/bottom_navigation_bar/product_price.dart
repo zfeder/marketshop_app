@@ -1,5 +1,11 @@
+import 'dart:async';
+import 'dart:ffi';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+
+import 'add_product_database.dart';
 
 class ProductPrice extends StatefulWidget {
   final int productBarcode;
@@ -12,14 +18,62 @@ class ProductPrice extends StatefulWidget {
 class _ProductPriceState extends State<ProductPrice> {
   final itemController = TextEditingController();
   late List<Prodotto> prodotto = [];
+  String nomeProd = '';
   bool isLoading = true;
   String data = '';
   late Prodotto? selectedProduct;
+  bool isPopupVisible = false;
+
+
+  void addDataToFirebase(String nomeProdotto, double prezzo, int quantita, int barcode, String supermercato) {
+    DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
+    String? uidUser = FirebaseAuth.instance.currentUser?.uid;
+
+    String carrello = 'carrello/$uidUser/$barcode';
+    String productNameLowercase = supermercato.toLowerCase().replaceAll(' ', '_');
+    String path = carrello + productNameLowercase;
+
+    databaseReference.child(path).set({
+      'supermercato': supermercato,
+      'prezzo': prezzo.toDouble(), // Conversione da int a double
+      'nome': nomeProdotto,
+      'quantità': quantita
+    }).then((_) {
+      setState(() {
+        isPopupVisible = true;
+      });
+
+      Timer(Duration(seconds: 1), () {
+        setState(() {
+          isPopupVisible = false;
+        });
+      });
+    }).catchError((error) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Errore'),
+            content: Text('Si è verificato un errore durante l\'aggiunta del prodotto al carrello.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Chiudi'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    });
+  }
+
 
   Future<void> getDataFromDatabase(int barcode) async {
     var value = FirebaseDatabase.instance.ref();
 
-    String supermercato = 'supermercato/8012666060740/';
+    String supermercato = 'supermercato/$barcode/';
     String a = supermercato + itemController.text;
     var getValue = await value.child(a).once();
     dynamic showData = getValue.snapshot.value;
@@ -29,10 +83,13 @@ class _ProductPriceState extends State<ProductPrice> {
 
       prodotto = keyList.map<Prodotto>((key) {
         final data = dataMap[key];
+        nomeProd = data['nome'];
         return Prodotto(
-          Barcode: 8012666060740,
+          nome: data['nome'],
+          Barcode: barcode,
           Supermercato: data['supermercato'],
-          Prezzo: data['prezzo'],
+          Prezzo: data['prezzo'].toDouble(), // Modifica per convertire il valore in double
+          Quantita: 0,
         );
       }).toList();
 
@@ -40,7 +97,15 @@ class _ProductPriceState extends State<ProductPrice> {
         isLoading = false;
       });
     }
+    if (prodotto.isEmpty) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => AddProductDatabase(widget.productBarcode)),
+      );
+    }
   }
+
 
   @override
   void initState() {
@@ -57,6 +122,10 @@ class _ProductPriceState extends State<ProductPrice> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Text(
+                nomeProd, // Aggiungi qui il testo del nome del prodotto
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
               Expanded(
                 child: ListView.builder(
                   itemCount: prodotto.length,
@@ -65,9 +134,53 @@ class _ProductPriceState extends State<ProductPrice> {
                     return ListTile(
                       onTap: () {},
                       title: Text(product.Supermercato),
-                      subtitle: Text('Peso: ${product.Prezzo}'),
+                      subtitle: Text('Prezzo: ${product.Prezzo}'),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              setState(() {
+                                if (product.Quantita > 0) {
+                                  product.Quantita--;
+                                }
+                              });
+                            },
+                            icon: Icon(Icons.remove),
+                          ),
+                          Text('${product.Quantita}'),
+                          IconButton(
+                            onPressed: () {
+                              setState(() {
+                                product.Quantita++;
+                              });
+                            },
+                            icon: Icon(Icons.add),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              addDataToFirebase(product.nome, product.Prezzo, product.Quantita, product.Barcode, product.Supermercato);
+                            },
+                            icon: Icon(Icons.add_shopping_cart_outlined),
+                          ),
+                        ],
+                      ),
                     );
                   },
+                ),
+              ),
+              Visibility(
+                visible: isPopupVisible,
+                child: Container(
+                  width: 200,
+                  height: 100,
+                  color: Colors.grey[200],
+                  child: const Center(
+                    child: Text(
+                      'Prodotto aggiunto al carrello!',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -79,13 +192,17 @@ class _ProductPriceState extends State<ProductPrice> {
 }
 
 class Prodotto {
+  final String nome;
   final int Barcode;
   final String Supermercato;
-  final String Prezzo;
+  final double Prezzo;
+  int Quantita;
 
   Prodotto({
+    required this.nome,
     required this.Barcode,
     required this.Supermercato,
     required this.Prezzo,
+    this.Quantita = 0,
   });
 }

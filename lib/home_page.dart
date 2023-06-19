@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:marketshop_app/bottom_navigation_bar/account_settings.dart';
 import 'package:marketshop_app/bottom_navigation_bar/item_bar.dart';
 import 'package:marketshop_app/bottom_navigation_bar/store_market_list.dart';
+import 'package:marketshop_app/bottom_navigation_bar/shopping_cart.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,6 +22,8 @@ class _HomePage extends State<HomePage> {
 
     const AccountSettings(),
 
+    const ShoppingCart(),
+
   ];
 
 
@@ -35,7 +38,7 @@ class _HomePage extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('BottomNavigationBar Sample'),
+        title: const Text('MarketShop App'),
       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
@@ -53,6 +56,10 @@ class _HomePage extends State<HomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),
             label: 'Account',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_bag),
+            label: 'Carrello',
           ),
         ],
         currentIndex: _selectedIndex,
