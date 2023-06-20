@@ -15,11 +15,9 @@ void signUserOut() {
 class _AccountSettings extends State<AccountSettings> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: const IconButton(
-          onPressed: signUserOut,
-          icon: Icon(Icons.logout),
-        ),
+    return const IconButton(
+      onPressed: signUserOut,
+      icon: Icon(Icons.logout),
     );
   }
   

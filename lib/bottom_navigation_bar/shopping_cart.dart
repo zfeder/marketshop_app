@@ -81,7 +81,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                             Text('Quantità: ${product.Quantita}'),
                             ElevatedButton(
                               onPressed: () => removeProduct(index),
-                              child: Text('Rimuovi'),
+                              child: const Text('Rimuovi'),
                             ),
                           ],
                         ),

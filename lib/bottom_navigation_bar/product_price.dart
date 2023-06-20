@@ -1,10 +1,7 @@
 import 'dart:async';
-import 'dart:ffi';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-
 import 'add_product_database.dart';
 
 class ProductPrice extends StatefulWidget {
@@ -24,8 +21,7 @@ class _ProductPriceState extends State<ProductPrice> {
   late Prodotto? selectedProduct;
   bool isPopupVisible = false;
 
-
-  void addDataToFirebase(String nomeProdotto, double prezzo, int quantita, int barcode, String supermercato) {
+  void addDataToFirebase(String nomeProdotto, double prezzo, int quantita, int barcode, String supermercato, String marca) {
     DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
     String? uidUser = FirebaseAuth.instance.currentUser?.uid;
 
@@ -37,13 +33,14 @@ class _ProductPriceState extends State<ProductPrice> {
       'supermercato': supermercato,
       'prezzo': prezzo.toDouble(), // Conversione da int a double
       'nome': nomeProdotto,
-      'quantità': quantita
+      'quantità': quantita,
+      'marca': marca,
     }).then((_) {
       setState(() {
         isPopupVisible = true;
       });
 
-      Timer(Duration(seconds: 1), () {
+      Timer(const Duration(seconds: 1), () {
         setState(() {
           isPopupVisible = false;
         });
@@ -53,11 +50,11 @@ class _ProductPriceState extends State<ProductPrice> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Errore'),
-            content: Text('Si è verificato un errore durante l\'aggiunta del prodotto al carrello.'),
+            title: const Text('Errore'),
+            content: const Text('Si è verificato un errore durante l\'aggiunta del prodotto al carrello.'),
             actions: <Widget>[
               TextButton(
-                child: Text('Chiudi'),
+                child: const Text('Chiudi'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -69,7 +66,6 @@ class _ProductPriceState extends State<ProductPrice> {
     });
   }
 
-
   Future<void> getDataFromDatabase(int barcode) async {
     var value = FirebaseDatabase.instance.ref();
 
@@ -77,6 +73,7 @@ class _ProductPriceState extends State<ProductPrice> {
     String a = supermercato + itemController.text;
     var getValue = await value.child(a).once();
     dynamic showData = getValue.snapshot.value;
+
     if (showData != null && showData is Map<dynamic, dynamic>) {
       Map<dynamic, dynamic> dataMap = showData;
       List<dynamic> keyList = dataMap.keys.toList();
@@ -87,6 +84,7 @@ class _ProductPriceState extends State<ProductPrice> {
         return Prodotto(
           nome: data['nome'],
           Barcode: barcode,
+          Marca: data['marca'],
           Supermercato: data['supermercato'],
           Prezzo: data['prezzo'].toDouble(), // Modifica per convertire il valore in double
           Quantita: 0,
@@ -97,15 +95,16 @@ class _ProductPriceState extends State<ProductPrice> {
         isLoading = false;
       });
     }
+
     if (prodotto.isEmpty) {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => AddProductDatabase(widget.productBarcode)),
+          builder: (context) => AddProductDatabase(widget.productBarcode),
+        ),
       );
     }
   }
-
 
   @override
   void initState() {
@@ -146,7 +145,7 @@ class _ProductPriceState extends State<ProductPrice> {
                                 }
                               });
                             },
-                            icon: Icon(Icons.remove),
+                            icon: const Icon(Icons.remove),
                           ),
                           Text('${product.Quantita}'),
                           IconButton(
@@ -155,13 +154,13 @@ class _ProductPriceState extends State<ProductPrice> {
                                 product.Quantita++;
                               });
                             },
-                            icon: Icon(Icons.add),
+                            icon: const Icon(Icons.add),
                           ),
                           IconButton(
                             onPressed: () {
-                              addDataToFirebase(product.nome, product.Prezzo, product.Quantita, product.Barcode, product.Supermercato);
+                              addDataToFirebase(product.nome, product.Prezzo, product.Quantita, product.Barcode, product.Supermercato, product.Marca);
                             },
-                            icon: Icon(Icons.add_shopping_cart_outlined),
+                            icon: const Icon(Icons.add_shopping_cart_outlined),
                           ),
                         ],
                       ),
@@ -196,6 +195,7 @@ class Prodotto {
   final int Barcode;
   final String Supermercato;
   final double Prezzo;
+  final String Marca;
   int Quantita;
 
   Prodotto({
@@ -203,6 +203,7 @@ class Prodotto {
     required this.Barcode,
     required this.Supermercato,
     required this.Prezzo,
+    required this.Marca,
     this.Quantita = 0,
   });
 }

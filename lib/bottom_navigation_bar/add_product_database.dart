@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:marketshop_app/bottom_navigation_bar/add_price_product.dart';
+import 'package:marketshop_app/bottom_navigation_bar/item_bar.dart';
+import 'package:marketshop_app/home_page.dart';
 
 class AddProductDatabase extends StatefulWidget {
   final int productBarcode;
@@ -27,26 +29,59 @@ class _AddProductDatabaseState extends State<AddProductDatabase> {
     'Surgelati',
   ];
 
-  void saveDataToDatabase(String productName, String brand, String category) {
-    DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
+  void backToItemBar(){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const HomePage()
+      ),
+    );
+  }
 
+  void addPrice(int barcode, String productName, String brand){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => AddPriceProduct(barcode, productName, brand)
+      ),
+    );
+
+  }
+
+
+
+  void saveDataToDatabase(String productName, String brand, String category) {
+
+    DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
     String barcode = 'barcode/$category/$brand';
+    String supermercato = 'supermercato/${widget.productBarcode}';
+
+    databaseReference.child(supermercato).set({
+    });
 
     databaseReference.child(barcode).set({
       'barcode': widget.productBarcode,
-      'nome': brand,
+      'nome': productName,
+      'marca': brand,
+      'valutazione': 0,
     }).then((_) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Success'),
-            content: Text('Data saved successfully.'),
+            title: const Text('Success'),
+            content: const Text('Data saved successfully.'),
             actions: <Widget>[
               TextButton(
-                child: Text('Close'),
+                  onPressed: () {
+                    addPrice(widget.productBarcode, productName, brand);
+                  },
+                  child: const Text('Aggiungi prezzo')
+              ),
+              TextButton(
+                child: const Text('Close'),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  backToItemBar();
                 },
               ),
             ],
@@ -58,11 +93,11 @@ class _AddProductDatabaseState extends State<AddProductDatabase> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Error'),
-            content: Text('An error occurred while saving data.'),
+            title: const Text('Error'),
+            content: const Text('An error occurred while saving data.'),
             actions: <Widget>[
               TextButton(
-                child: Text('Close'),
+                child: const Text('Close'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -72,6 +107,9 @@ class _AddProductDatabaseState extends State<AddProductDatabase> {
         },
       );
     });
+
+
+
   }
 
   @override
@@ -89,7 +127,7 @@ class _AddProductDatabaseState extends State<AddProductDatabase> {
               Text('Product Barcode: ${widget.productBarcode}'),
               const SizedBox(height: 20.0),
               TextField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Product Name',
                   border: OutlineInputBorder(),
                 ),
@@ -101,7 +139,7 @@ class _AddProductDatabaseState extends State<AddProductDatabase> {
               ),
               const SizedBox(height: 20.0),
               TextField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Brand',
                   border: OutlineInputBorder(),
                 ),
@@ -125,7 +163,7 @@ class _AddProductDatabaseState extends State<AddProductDatabase> {
                     child: Text(value),
                   );
                 }).toList(),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Select a category',
                   border: OutlineInputBorder(),
                 ),

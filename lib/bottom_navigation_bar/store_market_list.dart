@@ -104,7 +104,7 @@ class _SupermarketListState extends State<SupermarketList> {
                   Text(supermarket['name']),
                   Text(
                     supermarket['vicinity'],
-                    style: TextStyle(color: Colors.grey),
+                    style: const TextStyle(color: Colors.grey),
                   ),
                 ],
               ),

@@ -4,29 +4,26 @@ import 'package:marketshop_app/bottom_navigation_bar/item_bar.dart';
 import 'package:marketshop_app/bottom_navigation_bar/store_market_list.dart';
 import 'package:marketshop_app/bottom_navigation_bar/shopping_cart.dart';
 
+import 'bottom_navigation_bar/home_product.dart';
+
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key});
 
   @override
-  State<HomePage> createState() => _HomePage();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePage extends State<HomePage> {
-  int _selectedIndex = 0;
-  static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 2; // Indice iniziale impostato a 2 (HomePage)
+  static const TextStyle optionStyle =
+  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static final List<Widget> _widgetOptions = <Widget>[
-
     const SupermarketList(),
-
     const ItemBar(dataBarcode: ''),
-
-    const AccountSettings(),
-
+    const HomeProduct(),
     const ShoppingCart(),
-
+    const AccountSettings(),
   ];
-
-
 
   void _onItemTapped(int index) {
     setState(() {
@@ -39,6 +36,7 @@ class _HomePage extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('MarketShop App'),
+        backgroundColor: Colors.green,
       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
@@ -50,24 +48,27 @@ class _HomePage extends State<HomePage> {
             label: 'Market Vicini',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'Lista Prodotti',
+            icon: Icon(Icons.search),
+            label: 'Cerca Prodotti',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label: 'Account',
+            icon: Icon(Icons.home),
+            label: 'Home Page',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_bag),
             label: 'Carrello',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle),
+            label: 'Account',
+          ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
+        selectedItemColor: Colors.green, // Evidenzia l'icona selezionata
         unselectedItemColor: Colors.grey[800],
         onTap: _onItemTapped,
       ),
     );
   }
-// prova commit
 }

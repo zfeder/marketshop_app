@@ -36,7 +36,7 @@ class _ItemBarState extends State<ItemBar> {
         return Prodotto(
           Barcode: data['barcode'],
           Nome: data['nome'],
-          Peso: data['peso'],
+          Marca: data['marca'],
           Valutazione: data['valutazione'],
         );
       }).toList();
@@ -114,7 +114,7 @@ class _ItemBarState extends State<ItemBar> {
                           onTap(product);
                         },
                         title: Text(product.Nome),
-                        subtitle: Text('Peso: ${product.Peso}'),
+                        subtitle: Text('Peso: ${product.Marca}'),
                         trailing: Text('Valutazione: ${product.Valutazione}'),
                       );
                     },
@@ -131,13 +131,13 @@ class _ItemBarState extends State<ItemBar> {
 class Prodotto {
   final int Barcode;
   final String Nome;
-  final String Peso;
+  final String Marca;
   final int Valutazione;
 
   Prodotto({
     required this.Barcode,
     required this.Nome,
-    required this.Peso,
+    required this.Marca,
     required this.Valutazione,
   });
 }
