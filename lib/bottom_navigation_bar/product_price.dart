@@ -20,6 +20,7 @@ class _ProductPriceState extends State<ProductPrice> {
   String data = '';
   late Prodotto? selectedProduct;
   bool isPopupVisible = false;
+  double rating = 0.0; // Valutazione iniziale
 
   void addDataToFirebase(String nomeProdotto, double prezzo, int quantita, int barcode, String supermercato, String marca) {
     DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
@@ -88,6 +89,7 @@ class _ProductPriceState extends State<ProductPrice> {
           Supermercato: data['supermercato'],
           Prezzo: data['prezzo'].toDouble(), // Modifica per convertire il valore in double
           Quantita: 0,
+          Valutazione: data.containsKey('rating') ? data['rating'].toDouble() : 0.0,
         );
       }).toList();
 
@@ -103,6 +105,54 @@ class _ProductPriceState extends State<ProductPrice> {
           builder: (context) => AddProductDatabase(widget.productBarcode),
         ),
       );
+    }
+  }
+
+  void saveRatingToFirebase(double valutazione) {
+    DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
+    String? uidUser = FirebaseAuth.instance.currentUser?.uid;
+
+    if (selectedProduct != null && uidUser != null) {
+      String path = 'barcode/${selectedProduct!.Categoria}/${selectedProduct!.Barcode}';
+      databaseReference.child(path).update({
+        'valutazione': valutazione,
+      }).then((_) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Successo'),
+              content: const Text('Valutazione salvata con successo.'),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Chiudi'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }).catchError((error) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Errore'),
+              content: const Text('Si è verificato un errore durante il salvataggio della valutazione.'),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Chiudi'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      });
     }
   }
 
@@ -131,7 +181,12 @@ class _ProductPriceState extends State<ProductPrice> {
                   itemBuilder: (context, index) {
                     final product = prodotto[index];
                     return ListTile(
-                      onTap: () {},
+                      onTap: () {
+                        setState(() {
+                          selectedProduct = product;
+                          rating = selectedProduct!.Valutazione;
+                        });
+                      },
                       title: Text(product.Supermercato),
                       subtitle: Text('Prezzo: ${product.Prezzo}'),
                       trailing: Row(
@@ -182,6 +237,26 @@ class _ProductPriceState extends State<ProductPrice> {
                   ),
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: StarRating(
+                  starCount: 5,
+                  rating: rating,
+                  color: Colors.amber,
+                  size: 30.0,
+                  onRatingChanged: (newRating) {
+                    setState(() {
+                      rating = newRating;
+                    });
+                  },
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                    saveRatingToFirebase(rating);
+                },
+                child: const Text('Salva valutazione'),
+              ),
             ],
           ),
         ),
@@ -196,7 +271,9 @@ class Prodotto {
   final String Supermercato;
   final double Prezzo;
   final String Marca;
+  String Categoria;
   int Quantita;
+  double Valutazione;
 
   Prodotto({
     required this.nome,
@@ -204,6 +281,47 @@ class Prodotto {
     required this.Supermercato,
     required this.Prezzo,
     required this.Marca,
+    this.Categoria = '',
     this.Quantita = 0,
+    this.Valutazione = 0.0,
   });
+}
+
+class StarRating extends StatefulWidget {
+  final int starCount;
+  final double rating;
+  final Color color;
+  final double size;
+  final Function(double) onRatingChanged;
+
+  StarRating({
+    required this.starCount,
+    required this.rating,
+    required this.color,
+    required this.size,
+    required this.onRatingChanged,
+  });
+
+  @override
+  _StarRatingState createState() => _StarRatingState();
+}
+
+class _StarRatingState extends State<StarRating> {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(widget.starCount, (index) {
+        bool highlighted = index < widget.rating;
+        return GestureDetector(
+          onTap: () => widget.onRatingChanged(index + 1.0),
+          child: Icon(
+            highlighted ? Icons.star : Icons.star_border,
+            color: widget.color,
+            size: widget.size,
+          ),
+        );
+      }),
+    );
+  }
 }

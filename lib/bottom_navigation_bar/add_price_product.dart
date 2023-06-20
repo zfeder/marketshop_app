@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:marketshop_app/home_page.dart';
 
 class AddPriceProduct extends StatefulWidget {
   final int productBarcode;
@@ -21,6 +22,15 @@ class _AddPriceProductState extends State<AddPriceProduct> {
     super.dispose();
   }
 
+  void backToHome() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => const HomePage()
+      ),
+    );
+  }
+
   void savePriceToDatabase(String supermercato, double prezzo) {
     DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
     String superMarket = 'supermercato/${widget.productBarcode}/$supermercato';
@@ -39,7 +49,7 @@ class _AddPriceProductState extends State<AddPriceProduct> {
             actions: <Widget>[
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  backToHome();
                 },
                 child: Text('Close'),
               ),
@@ -57,7 +67,7 @@ class _AddPriceProductState extends State<AddPriceProduct> {
             actions: <Widget>[
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  backToHome();
                 },
                 child: Text('Close'),
               ),

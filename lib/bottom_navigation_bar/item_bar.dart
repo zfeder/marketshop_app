@@ -38,6 +38,7 @@ class _ItemBarState extends State<ItemBar> {
           Nome: data['nome'],
           Marca: data['marca'],
           Valutazione: data['valutazione'],
+          Categoria: data['categoria'],
         );
       }).toList();
 
@@ -133,11 +134,13 @@ class Prodotto {
   final String Nome;
   final String Marca;
   final int Valutazione;
+  final String Categoria;
 
   Prodotto({
     required this.Barcode,
     required this.Nome,
     required this.Marca,
     required this.Valutazione,
+    required this.Categoria,
   });
 }

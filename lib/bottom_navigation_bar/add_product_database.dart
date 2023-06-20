@@ -53,7 +53,7 @@ class _AddProductDatabaseState extends State<AddProductDatabase> {
   void saveDataToDatabase(String productName, String brand, String category) {
 
     DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
-    String barcode = 'barcode/$category/$brand';
+    String barcode = 'barcode/$category/${widget.productBarcode}';
     String supermercato = 'supermercato/${widget.productBarcode}';
 
     databaseReference.child(supermercato).set({
@@ -64,6 +64,7 @@ class _AddProductDatabaseState extends State<AddProductDatabase> {
       'nome': productName,
       'marca': brand,
       'valutazione': 0,
+      'categoria': category,
     }).then((_) {
       showDialog(
         context: context,
