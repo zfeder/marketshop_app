@@ -18,7 +18,6 @@ class _ProductPriceState extends State<ProductPrice> {
   String nomeProd = '';
   bool isLoading = true;
   String data = '';
-  late Prodotto? selectedProduct;
   bool isPopupVisible = false;
   double rating = 0.0; // Valutazione iniziale
 
@@ -87,6 +86,7 @@ class _ProductPriceState extends State<ProductPrice> {
           Barcode: barcode,
           Marca: data['marca'],
           Supermercato: data['supermercato'],
+          Categoria : data['categoria'],
           Prezzo: data['prezzo'].toDouble(), // Modifica per convertire il valore in double
           Quantita: 0,
           Valutazione: data.containsKey('rating') ? data['rating'].toDouble() : 0.0,
@@ -112,8 +112,8 @@ class _ProductPriceState extends State<ProductPrice> {
     DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
     String? uidUser = FirebaseAuth.instance.currentUser?.uid;
 
-    if (selectedProduct != null && uidUser != null) {
-      String path = 'barcode/${selectedProduct!.Categoria}/${selectedProduct!.Barcode}';
+    if (uidUser != null) {
+      String path = 'barcode/${prodotto[0].Categoria}/${prodotto[0].Barcode}';
       databaseReference.child(path).update({
         'valutazione': valutazione,
       }).then((_) {
@@ -181,12 +181,6 @@ class _ProductPriceState extends State<ProductPrice> {
                   itemBuilder: (context, index) {
                     final product = prodotto[index];
                     return ListTile(
-                      onTap: () {
-                        setState(() {
-                          selectedProduct = product;
-                          rating = selectedProduct!.Valutazione;
-                        });
-                      },
                       title: Text(product.Supermercato),
                       subtitle: Text('Prezzo: ${product.Prezzo}'),
                       trailing: Row(

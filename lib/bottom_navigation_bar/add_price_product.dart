@@ -6,7 +6,8 @@ class AddPriceProduct extends StatefulWidget {
   final int productBarcode;
   final String productName;
   final String brand;
-  const AddPriceProduct(this.productBarcode, this.productName, this.brand, {Key? key}) : super(key: key);
+  final String category;
+  const AddPriceProduct(this.productBarcode, this.productName, this.brand, this.category, {Key? key}) : super(key: key);
 
   @override
   _AddPriceProductState createState() => _AddPriceProductState();
@@ -39,6 +40,7 @@ class _AddPriceProductState extends State<AddPriceProduct> {
       'prezzo': prezzo,
       'marca': widget.brand,
       'nome': widget.productName,
+      'categoria' : widget.category,
     }).then((_) {
       showDialog(
         context: context,
@@ -118,8 +120,8 @@ class _AddPriceProductState extends State<AddPriceProduct> {
                   child: Text('Despar'),
                 ),
                 DropdownMenuItem(
-                  value: "In's",
-                  child: Text("In's"),
+                  value: "iN's",
+                  child: Text("iN's"),
                 ),
               ],
               decoration: const InputDecoration(

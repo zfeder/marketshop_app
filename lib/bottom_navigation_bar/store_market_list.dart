@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:marketshop_app/bottom_navigation_bar/product_list_market.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,6 +31,15 @@ class SupermarketList extends StatefulWidget {
 
 class _SupermarketListState extends State<SupermarketList> {
   List<dynamic> supermarkets = [];
+  List<String> allowedNames = [
+    'carrefour',
+    'crai',
+    'lidl',
+    'eurospin',
+    'despar',
+    "in's"
+  ];
+
 
   @override
   void initState() {
@@ -65,7 +75,9 @@ class _SupermarketListState extends State<SupermarketList> {
         supermarket['distance'] = distance;
       }
 
-      fetchedSupermarkets.sort((a, b) => a['distance'].compareTo(b['distance'])); // Ordina la lista per distanza
+      fetchedSupermarkets.sort((a, b) =>
+          a['distance'].compareTo(
+              b['distance'])); // Ordina la lista per distanza
 
       setState(() {
         supermarkets = fetchedSupermarkets;
@@ -94,6 +106,7 @@ class _SupermarketListState extends State<SupermarketList> {
 
           return InkWell(
             onTap: () {
+              goToProductListMarket(supermarket['name']);
               // Esegui azioni quando l'elemento viene cliccato
               print('Hai cliccato su ${supermarket['name']}');
             },
@@ -115,26 +128,58 @@ class _SupermarketListState extends State<SupermarketList> {
       ),
     );
   }
-}
+
+  void goToProductListMarket(String supermarketName) {
+    String filteredSupermarketName = allowedNames.firstWhere(
+          (name) => supermarketName.toLowerCase().contains(name),
+      orElse: () => '',
+    );
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProductListMarket(filteredSupermarketName),
+      ),
+    );
+  }
 
 // Effettua la richiesta API per ottenere la lista dei supermercati nelle vicinanze
-Future<List<dynamic>> fetchSupermarkets(double lat, double lng) async {
-  const apiKey = 'AIzaSyCKaqCw4qaOftjTRAZshAoihVZDJiDeYMI'; // Sostituisci con la tua chiave API di Google Places
+  Future<List<dynamic>> fetchSupermarkets(double lat, double lng) async {
+    const apiKey = 'AIzaSyCKaqCw4qaOftjTRAZshAoihVZDJiDeYMI'; // Replace with your Google Places API key
 
-  final url =
-      'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$lat,$lng&radius=2000&type=supermarket&key=$apiKey';
+    final url =
+        'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$lat,$lng&radius=2000&type=supermarket&key=$apiKey';
 
-  final response = await http.get(Uri.parse(url));
+    final response = await http.get(Uri.parse(url));
 
-  if (response.statusCode == 200) {
-    final data = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
 
-    if (data['status'] == 'OK') {
-      return data['results'];
+      if (data['status'] == 'OK') {
+        List<dynamic> results = data['results'];
+
+        List<String> allowedNames = [
+          'carrefour',
+          'crai',
+          'lidl',
+          'eurospin',
+          'despar',
+          "in's"
+        ];
+
+        // Filter the results based on the allowed names (case-insensitive)
+        List<dynamic> filteredResults = results.where((result) {
+          String name = result['name'].toLowerCase();
+          return allowedNames.any((allowedName) => name.contains(allowedName));
+        }).toList();
+
+        return filteredResults;
+      } else {
+        throw Exception('API request error: ${data['status']}');
+      }
     } else {
-      throw Exception('Errore nella richiesta API: ${data['status']}');
+      throw Exception('API request error: ${response.statusCode}');
     }
-  } else {
-    throw Exception('Errore nella richiesta API: ${response.statusCode}');
   }
+
 }

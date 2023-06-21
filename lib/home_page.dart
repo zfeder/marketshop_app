@@ -45,15 +45,15 @@ class _HomePageState extends State<HomePage> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.room),
-            label: 'Market Vicini',
+            label: 'Market',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
-            label: 'Cerca Prodotti',
+            label: 'Cerca',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home Page',
+            label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_bag),

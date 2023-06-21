@@ -116,7 +116,13 @@ class _ItemBarState extends State<ItemBar> {
                         },
                         title: Text(product.Nome),
                         subtitle: Text('Peso: ${product.Marca}'),
-                        trailing: Text('Valutazione: ${product.Valutazione}'),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('${product.Valutazione}'),
+                            const Icon(Icons.star, color: Colors.amber),
+                          ],
+                        ),
                       );
                     },
                   ),

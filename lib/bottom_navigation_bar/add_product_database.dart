@@ -38,11 +38,11 @@ class _AddProductDatabaseState extends State<AddProductDatabase> {
     );
   }
 
-  void addPrice(int barcode, String productName, String brand){
+  void addPrice(int barcode, String productName, String brand, String category){
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => AddPriceProduct(barcode, productName, brand)
+          builder: (context) => AddPriceProduct(barcode, productName, brand, category)
       ),
     );
 
@@ -75,7 +75,7 @@ class _AddProductDatabaseState extends State<AddProductDatabase> {
             actions: <Widget>[
               TextButton(
                   onPressed: () {
-                    addPrice(widget.productBarcode, productName, brand);
+                    addPrice(widget.productBarcode, productName, brand, category);
                   },
                   child: const Text('Aggiungi prezzo')
               ),
