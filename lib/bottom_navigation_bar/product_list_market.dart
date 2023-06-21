@@ -50,18 +50,23 @@ class _ProductListMarketState extends State<ProductListMarket> {
         return false;
       });
 
+      prodotto = valueList.map<Prodotto>((item) {
+        final String categoria = item['categoria']; // Assicura che la categoria non sia null
+        final String marca = item['marca']; // Assicura che la marca non sia null
+        final String nome = item['nome']; // Assicura che il nome non sia null
+        final double prezzo = item['prezzo']?.toDouble(); // Assicura che il prezzo non sia null
+        final String supermercato = item['supermercato']; // Assicura che il supermercato non sia null
 
-      prodotto = keyList.map<Prodotto>((key) {
-        final data = dataMap[key];
         return Prodotto(
-          Barcode: data['barcode'],
-          Categoria: data['categoria'],
-          Marca: data['marca'],
-          Nome: data['nome'],
-          Prezzo: data['prezzo'].toDouble(),
-          Supermercato: data['supermercato'], // Imposta il valore desiderato per key
+          Categoria: categoria,
+          Marca: marca,
+          Nome: nome,
+          Prezzo: prezzo,
+          Supermercato: supermercato,
         );
       }).toList();
+
+
 
 
       setState(() {
@@ -85,7 +90,7 @@ class _ProductListMarketState extends State<ProductListMarket> {
             final product = prodotto[index];
             return ListTile(
               title: Text(product.Nome),
-              subtitle: Text('Price: \$${product.Prezzo.toStringAsFixed(2)}'),
+              subtitle: Text('Prezzo: ${product.Prezzo}'),
             );
           },
         ),
@@ -100,7 +105,6 @@ class Prodotto {
   final String Nome;
   final double Prezzo;
   final String Supermercato;
-  final int Barcode;
 
   Prodotto({
     required this.Categoria,
@@ -108,7 +112,6 @@ class Prodotto {
     required this.Nome,
     required this.Prezzo,
     required this.Supermercato,
-    required this.Barcode,
   });
 }
 
