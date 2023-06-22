@@ -34,46 +34,41 @@ class _ProductListMarketState extends State<ProductListMarket> {
     dynamic showData = getValue.snapshot.value;
 
     if (showData != null && showData is Map<dynamic, dynamic>) {
-      Map<dynamic, dynamic> dataMap = showData;
-      List<dynamic> keyList = dataMap.keys.toList();
-      List<dynamic> valueList = dataMap.values.toList();
-      //valueList.removeWhere((element) => element != 'Carrefour');
       String supermercato2 = widget.supermarketName.capitalize();
-      for (int i = 0; i < valueList.length; i++) {
-        valueList[i].removeWhere((key, value) => value['supermercato'] != supermercato2);
-      }
+      Map<dynamic, dynamic> dataMap = showData;
+      List<dynamic> keyList = [];
+      List<dynamic> valueList = [];
 
-      valueList.removeWhere((element) {
-        if (element is Map<dynamic, dynamic>) {
-          return element.isEmpty;
-        }
-        return false;
+      dataMap.forEach((key, value) {
+        value.forEach((supermercato, prodotto) {
+          if (supermercato == supermercato2) {
+            keyList.add(key);
+            valueList.add(prodotto);
+          }
+        });
       });
 
-      prodotto = valueList.map<Prodotto>((item) {
-        final String categoria = item['categoria']; // Assicura che la categoria non sia null
-        final String marca = item['marca']; // Assicura che la marca non sia null
-        final String nome = item['nome']; // Assicura che il nome non sia null
-        final double prezzo = item['prezzo']?.toDouble(); // Assicura che il prezzo non sia null
-        final String supermercato = item['supermercato']; // Assicura che il supermercato non sia null
-
+      List<Prodotto> prodotti = keyList.map<Prodotto>((key) {
+        final data = valueList[keyList.indexOf(key)];
         return Prodotto(
-          Categoria: categoria,
-          Marca: marca,
-          Nome: nome,
-          Prezzo: prezzo,
-          Supermercato: supermercato,
+          Barcode: data['barcode'],
+          Nome: data['nome'],
+          Categoria: data['categoria'],
+          Marca: data['marca'],
+          Prezzo: data['prezzo'].toDouble(),
+          Supermercato: data['supermercato'],
         );
       }).toList();
 
-
-
-
       setState(() {
+        prodotto = prodotti;
         isLoading = false;
       });
     }
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -105,6 +100,7 @@ class Prodotto {
   final String Nome;
   final double Prezzo;
   final String Supermercato;
+  final int Barcode;
 
   Prodotto({
     required this.Categoria,
@@ -112,6 +108,7 @@ class Prodotto {
     required this.Nome,
     required this.Prezzo,
     required this.Supermercato,
+    required this.Barcode,
   });
 }
 
