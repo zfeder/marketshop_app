@@ -41,24 +41,28 @@ class _AddPriceProductState extends State<AddPriceProduct> {
       'marca': widget.brand,
       'nome': widget.productName,
       'categoria' : widget.category,
+      'barcode' : widget.productBarcode,
     }).then((_) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Success'),
-            content: Text('Price saved successfully.'),
+            content: Text('Prezzo aggiunto correttamente'),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
                   backToHome();
                 },
-                child: Text('Close'),
+                child: const Text(
+                  'Chiudi',
+                  style: TextStyle(color: Colors.green),
+                ),
               ),
             ],
           );
         },
       );
+
     }).catchError((error) {
       showDialog(
         context: context,
@@ -71,7 +75,7 @@ class _AddPriceProductState extends State<AddPriceProduct> {
                 onPressed: () {
                   backToHome();
                 },
-                child: Text('Close'),
+                child: Text('Chiudi'),
               ),
             ],
           );
@@ -84,12 +88,22 @@ class _AddPriceProductState extends State<AddPriceProduct> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Price Product'),
+        title: const Text(
+          'Aggiungi Prezzo',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.green,
+        titleTextStyle: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             DropdownButtonFormField<String>(
               value: _selectedSupermercato,
@@ -125,24 +139,48 @@ class _AddPriceProductState extends State<AddPriceProduct> {
                 ),
               ],
               decoration: const InputDecoration(
-                labelText: 'Supermercato',
+                labelText: 'Seleziona una supermercato',
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(width: 2, color: Colors.green),
+                ),
               ),
             ),
-            const SizedBox(height: 16.0),
+            const SizedBox(height: 20.0),
             TextField(
               controller: _prezzoController,
               decoration: const InputDecoration(
                 labelText: 'Prezzo',
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.grey, // Colore del bordo predefinito
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.grey, // Colore del bordo predefinito quando non in stato di focus
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(width: 2,
+                    color: Colors.green, // Colore del bordo durante lo stato di focus
+                  ),
+                ),
               ),
             ),
-            const SizedBox(height: 16.0),
+            const SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
                 String supermercato = _selectedSupermercato;
                 double prezzo = double.parse(_prezzoController.text);
                 savePriceToDatabase(supermercato, prezzo);
               },
-              child: Text('Salva'),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
+              ),
+              child: const Text('Aggiungi'),
             ),
           ],
         ),

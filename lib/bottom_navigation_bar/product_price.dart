@@ -35,6 +35,7 @@ class _ProductPriceState extends State<ProductPrice> {
       'nome': nomeProdotto,
       'quantità': quantita,
       'marca': marca,
+      'barcode' : barcode,
     }).then((_) {
       setState(() {
         isPopupVisible = true;
@@ -165,16 +166,26 @@ class _ProductPriceState extends State<ProductPrice> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          nomeProd,
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.green,
+        titleTextStyle: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      ),
+
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                nomeProd, // Aggiungi qui il testo del nome del prodotto
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
               Expanded(
                 child: ListView.builder(
                   itemCount: prodotto.length,
@@ -249,6 +260,9 @@ class _ProductPriceState extends State<ProductPrice> {
                 onPressed: () {
                     saveRatingToFirebase(rating);
                 },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
+                ),
                 child: const Text('Salva valutazione'),
               ),
             ],

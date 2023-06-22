@@ -76,7 +76,6 @@ class _ItemBarState extends State<ItemBar> {
         builder: (context) => ProductPrice(productBarcode),
       ),
     );
-
   }
 
   @override
@@ -88,18 +87,45 @@ class _ItemBarState extends State<ItemBar> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              MyTextField(
-                controller: itemController,
-                hintText: 'Cerca per nome',
-                obscureText: false,
-              ),
-              ElevatedButton(
-                onPressed: getDataFromDatabase,
-                child: const Text('Cerca'),
-              ),
-              ElevatedButton(
-                onPressed: scannerOn,
-                child: const Text('Scansiona BARCODE'),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: itemController,
+                      decoration: const InputDecoration(
+                        labelText: 'Cerca per nome...',
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey, // Colore del bordo predefinito
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey, // Colore del bordo predefinito quando non in stato di focus
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(width: 2,
+                            color: Colors.green, // Colore del bordo durante lo stato di focus
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  IconButton(
+                    onPressed: getDataFromDatabase,
+                    icon: Icon(Icons.search_outlined),
+                    color: Colors.green,
+                    //child: const Text('Cerca'),
+                  ),
+                  const SizedBox(width: 10),
+                  IconButton(
+                    onPressed: scannerOn,
+                    icon: Icon(Icons.camera_alt),
+                    color: Colors.green,
+                  ),
+                ],
               ),
               const SizedBox(height: 20),
               if (isLoading)
@@ -115,12 +141,18 @@ class _ItemBarState extends State<ItemBar> {
                           onTap(product);
                         },
                         title: Text(product.Nome),
-                        subtitle: Text('Peso: ${product.Marca}'),
+                        subtitle: Text('Marca: ${product.Marca}'),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text('${product.Valutazione}'),
-                            const Icon(Icons.star, color: Colors.amber),
+                            product.Valutazione != 0
+                                ? Row(
+                              children: [
+                                Text('${product.Valutazione}'),
+                                const Icon(Icons.star, color: Colors.amber),
+                              ],
+                            )
+                                : Text('Nessuna valutazione'),
                           ],
                         ),
                       );

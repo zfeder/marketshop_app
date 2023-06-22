@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:marketshop_app/bottom_navigation_bar/add_price_product.dart';
-import 'package:marketshop_app/bottom_navigation_bar/item_bar.dart';
 import 'package:marketshop_app/home_page.dart';
 
 class AddProductDatabase extends StatefulWidget {
@@ -70,23 +69,29 @@ class _AddProductDatabaseState extends State<AddProductDatabase> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Success'),
-            content: const Text('Data saved successfully.'),
+            content: const Text('Prodotto aggiunto correttamente'),
             actions: <Widget>[
               TextButton(
-                  onPressed: () {
-                    addPrice(widget.productBarcode, productName, brand, category);
-                  },
-                  child: const Text('Aggiungi prezzo')
+                onPressed: () {
+                  addPrice(widget.productBarcode, productName, brand, category);
+                },
+                child: const Text(
+                  'Aggiungi prezzo',
+                  style: TextStyle(color: Colors.green),
+                ),
               ),
               TextButton(
-                child: const Text('Close'),
+                child: const Text(
+                  'Chiudi',
+                  style: TextStyle(color: Colors.green),
+                ),
                 onPressed: () {
                   backToItemBar();
                 },
               ),
             ],
           );
+
         },
       );
     }).catchError((error) {
@@ -117,20 +122,45 @@ class _AddProductDatabaseState extends State<AddProductDatabase> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Product to Database'),
+        title: const Text(
+          'Aggiungi Prodotto',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.green,
+        titleTextStyle: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
       ),
+
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Product Barcode: ${widget.productBarcode}'),
+              Text('Barcode: ${widget.productBarcode}'),
               const SizedBox(height: 20.0),
               TextField(
                 decoration: const InputDecoration(
-                  labelText: 'Product Name',
-                  border: OutlineInputBorder(),
+                  labelText: 'Nome Prodotto',
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.grey, // Colore del bordo predefinito
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.grey, // Colore del bordo predefinito quando non in stato di focus
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(width: 2,
+                      color: Colors.green, // Colore del bordo durante lo stato di focus
+                    ),
+                  ),
                 ),
                 onChanged: (value) {
                   setState(() {
@@ -141,8 +171,22 @@ class _AddProductDatabaseState extends State<AddProductDatabase> {
               const SizedBox(height: 20.0),
               TextField(
                 decoration: const InputDecoration(
-                  labelText: 'Brand',
-                  border: OutlineInputBorder(),
+                  labelText: 'Marca',
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.grey, // Colore del bordo predefinito
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.grey, // Colore del bordo predefinito quando non in stato di focus
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(width: 2,
+                      color: Colors.green, // Colore del bordo durante lo stato di focus
+                    ),
+                  ),
                 ),
                 onChanged: (value) {
                   setState(() {
@@ -150,6 +194,9 @@ class _AddProductDatabaseState extends State<AddProductDatabase> {
                   });
                 },
               ),
+
+
+
               const SizedBox(height: 20.0),
               DropdownButtonFormField<String>(
                 value: selectedValue.isNotEmpty ? selectedValue : null,
@@ -165,21 +212,27 @@ class _AddProductDatabaseState extends State<AddProductDatabase> {
                   );
                 }).toList(),
                 decoration: const InputDecoration(
-                  labelText: 'Select a category',
-                  border: OutlineInputBorder(),
+                  labelText: 'Seleziona una categoria',
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(width: 2, color: Colors.green),
+                  ),
                 ),
               ),
+
               const SizedBox(height: 20.0),
               ElevatedButton(
                 onPressed: () {
-                  if (productName.isNotEmpty &&
-                      brand.isNotEmpty &&
-                      selectedValue.isNotEmpty) {
                     saveDataToDatabase(productName, brand, selectedValue);
-                  }
                 },
-                child: const Text('Save'),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
+                ),
+                child: const Text('Aggiungi'),
               ),
+
             ],
           ),
         ),

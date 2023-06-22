@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'dart:core';
 
+import 'package:marketshop_app/bottom_navigation_bar/product_price.dart';
+
 
 
 class ProductListMarket extends StatefulWidget {
@@ -24,6 +26,15 @@ class _ProductListMarketState extends State<ProductListMarket> {
   void initState() {
     super.initState();
     getDataFromDatabase();
+  }
+
+  void backToOtherPrice(int barcode) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProductPrice(barcode),
+      ),
+    );
   }
 
   Future<void> getDataFromDatabase() async {
@@ -74,8 +85,19 @@ class _ProductListMarketState extends State<ProductListMarket> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Product List - AAAAA'),
+        title: Text(
+          widget.supermarketName.capitalize(),
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.green,
+        titleTextStyle: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
       ),
+
       body: Center(
         child: isLoading
             ? null // Rimuove il CircularProgressIndicator
@@ -85,10 +107,44 @@ class _ProductListMarketState extends State<ProductListMarket> {
             final product = prodotto[index];
             return ListTile(
               title: Text(product.Nome),
-              subtitle: Text('Prezzo: ${product.Prezzo}'),
+              subtitle: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Marca: ${product.Marca}'),
+                      Text('Prezzo: ${product.Prezzo}'),
+                    ],
+                  ),
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: product.Valutazione != 0
+                          ? Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('${product.Valutazione}'),
+                          Icon(Icons.star, color: Colors.amber),
+                        ],
+                      )
+                          : Text('Nessuna valutazione'),
+                    ),
+                  ),
+                  TextButton(
+                    child: const Text('Altri prezzi'),
+                    onPressed: () {
+                      backToOtherPrice(product.Barcode);
+                    },
+                  ),
+                ],
+              ),
             );
           },
         ),
+
+
+
       ),
     );
   }
@@ -101,6 +157,7 @@ class Prodotto {
   final double Prezzo;
   final String Supermercato;
   final int Barcode;
+  double Valutazione;
 
   Prodotto({
     required this.Categoria,
@@ -109,6 +166,7 @@ class Prodotto {
     required this.Prezzo,
     required this.Supermercato,
     required this.Barcode,
+    this.Valutazione = 1,
   });
 }
 

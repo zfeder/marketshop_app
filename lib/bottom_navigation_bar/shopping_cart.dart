@@ -35,6 +35,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
           Supermercato: productData['supermercato'],
           Prezzo: productData['prezzo'].toDouble(),
           Quantita: productData['quantità'],
+          Barcode: productData['barcode'],
         );
       }).toList();
 
@@ -44,10 +45,39 @@ class _ShoppingCartState extends State<ShoppingCart> {
     }
   }
 
-  void removeProduct(int index) {
+  void showRemoveDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Prodotto rimosso'),
+          content: const Text('Il prodotto è stato rimosso dal carrello.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Chiudi il dialog
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void removeProduct(int index, int barcode, String supermercato) async {
+    String? uidUser = FirebaseAuth.instance.currentUser?.uid;
+    String supermarketLower = supermercato.toLowerCase();
+    String valueSuperBar = '$barcode$supermarketLower';
+    String path = 'carrello/$uidUser/$valueSuperBar/';
+
+    DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
+    await databaseReference.child(path).remove();
     setState(() {
       prodotto.removeAt(index);
     });
+
+    showRemoveDialog(); // Mostra il dialog dopo la rimozione del prodotto
   }
 
   @override
@@ -65,29 +95,42 @@ class _ShoppingCartState extends State<ShoppingCart> {
               ),
               const SizedBox(height: 10),
               Expanded(
-                child: ListView.builder(
+                child: prodotto.isNotEmpty
+                    ? ListView.builder(
                   itemCount: prodotto.length,
                   itemBuilder: (context, index) {
                     final product = prodotto[index];
 
                     return ListTile(
-                      leading: Text(product.Nome),
-                      title: Text(product.Supermercato),
-                      subtitle: Text('Prezzo totale: ${product.Prezzo * product.Quantita}€\nPrezzo per articolo: ${product.Prezzo}€'),
-                      trailing: Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text('Quantità: ${product.Quantita}'),
-                            ElevatedButton(
-                              onPressed: () => removeProduct(index),
-                              child: const Text('Rimuovi'),
+                      title: Text(product.Nome),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('${product.Supermercato}'),
+                          Text('Prezzo totale: ${product.Prezzo * product.Quantita}€'),
+                          Text('Prezzo per articolo: ${product.Prezzo}€'),
+                          Text('Quantità: ${product.Quantita}'),
+                        ],
+                      ),
+                      trailing: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextButton(
+                            onPressed: () => removeProduct(index, product.Barcode, product.Supermercato),
+                            child: const Text('Rimuovi'),
+                            style: ButtonStyle(
+                              padding: MaterialStateProperty.all<EdgeInsets>(
+                                const EdgeInsets.symmetric(horizontal: 8),
+                              ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     );
                   },
+                )
+                    : const Center(
+                  child: Text('Il carrello è vuoto'),
                 ),
               ),
             ],
@@ -103,11 +146,13 @@ class Prodotto {
   final String Supermercato;
   final double Prezzo;
   final int Quantita;
+  final int Barcode;
 
   Prodotto({
     required this.Nome,
     required this.Supermercato,
     required this.Prezzo,
     required this.Quantita,
+    required this.Barcode,
   });
 }

@@ -17,6 +17,7 @@ class _ScannerCode extends State<ScannerCode> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Mobile Scanner"),
+        backgroundColor: Colors.green,
         actions: [
           IconButton(
             color: Colors.white,
