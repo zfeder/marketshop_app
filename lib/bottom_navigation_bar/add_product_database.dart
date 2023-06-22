@@ -17,15 +17,15 @@ class _AddProductDatabaseState extends State<AddProductDatabase> {
   String productName = '';
   String brand = '';
   List<String> dropdownValues = [
-    'Acqua',
-    'Bevande',
-    'Carne',
-    'Frutta e Verdura',
-    'Latticini e Uova',
-    'Pane',
-    'Pesce',
-    'Snack',
-    'Surgelati',
+    'acqua',
+    'bevande',
+    'carne',
+    'frutta e verdura',
+    'latticini e uova',
+    'pane e pasta',
+    'pesce',
+    'snack',
+    'surgelati',
   ];
 
   void backToItemBar(){

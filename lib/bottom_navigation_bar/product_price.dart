@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'add_price_product.dart';
 import 'add_product_database.dart';
 
 class ProductPrice extends StatefulWidget {
@@ -157,6 +158,16 @@ class _ProductPriceState extends State<ProductPrice> {
     }
   }
 
+  void addProductPrice(int barcode, String productName, String brand, String category) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => AddPriceProduct(barcode, productName, brand, category)
+      ),
+    );
+
+  }
+
   @override
   void initState() {
     super.initState();
@@ -178,6 +189,14 @@ class _ProductPriceState extends State<ProductPrice> {
           fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              addProductPrice(prodotto[0].Barcode, prodotto[0].nome, prodotto[0].Marca, prodotto[0].Categoria);
+            },
+            icon: Icon(Icons.add),
+          ),
+        ],
       ),
 
       body: Center(
@@ -228,6 +247,7 @@ class _ProductPriceState extends State<ProductPrice> {
                   },
                 ),
               ),
+
               Visibility(
                 visible: isPopupVisible,
                 child: Container(
@@ -258,7 +278,7 @@ class _ProductPriceState extends State<ProductPrice> {
               ),
               ElevatedButton(
                 onPressed: () {
-                    saveRatingToFirebase(rating);
+                  saveRatingToFirebase(rating);
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(Colors.green),

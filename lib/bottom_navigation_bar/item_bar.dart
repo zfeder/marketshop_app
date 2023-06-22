@@ -1,7 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:marketshop_app/bottom_navigation_bar/product_list_market.dart';
 import 'package:marketshop_app/bottom_navigation_bar/product_price.dart';
-import '../components_login/button_textfield.dart';
 import 'package:marketshop_app/bottom_navigation_bar/scanner_code.dart';
 
 class ItemBar extends StatefulWidget {
@@ -24,7 +24,8 @@ class _ItemBarState extends State<ItemBar> {
   Future<void> getDataFromDatabase() async {
     var value = FirebaseDatabase.instance.ref();
     String barcode = 'barcode/';
-    String a = barcode + itemController.text;
+    String categortLower = itemController.text.toLowerCase();
+    String a = barcode + categortLower;
     var getValue = await value.child(a).once();
     dynamic showData = getValue.snapshot.value;
     if (showData != null && showData is Map<dynamic, dynamic>) {
