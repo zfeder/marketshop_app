@@ -115,7 +115,7 @@ class _ProductPriceState extends State<ProductPrice> {
     String? uidUser = FirebaseAuth.instance.currentUser?.uid;
 
     if (uidUser != null) {
-      String path = 'barcode/${prodotto[0].Categoria}/${prodotto[0].Barcode}';
+      String path = 'barcode/${prodotto[0].Categoria}/${prodotto[0].Barcode}/valutazione/$uidUser';
       databaseReference.child(path).update({
         'valutazione': valutazione,
       }).then((_) {

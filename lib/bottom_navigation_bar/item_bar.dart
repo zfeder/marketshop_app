@@ -23,21 +23,26 @@ class _ItemBarState extends State<ItemBar> {
   Future<void> getDataFromDatabase() async {
     var value = FirebaseDatabase.instance.ref();
     String barcode = 'barcode/';
-    String categortLower = itemController.text.toLowerCase();
-    String a = barcode + categortLower;
-    var getValue = await value.child(a).once();
+    String categoryLower = itemController.text.toLowerCase();
+    String path = barcode + categoryLower;
+
+    var getValue = await value.child(path).once();
     dynamic showData = getValue.snapshot.value;
+
     if (showData != null && showData is Map<dynamic, dynamic>) {
       Map<dynamic, dynamic> dataMap = showData;
       List<dynamic> keyList = dataMap.keys.toList();
 
       prodotto = keyList.map<Prodotto>((key) {
         final data = dataMap[key];
+        Map<dynamic, dynamic> valutazioneMap = data['valutazione'];
+        double averageRating = calculateAverageRating(valutazioneMap);
+
         return Prodotto(
           Barcode: data['barcode'],
           Nome: data['nome'],
           Marca: data['marca'],
-          Valutazione: data['valutazione'],
+          Valutazione: averageRating,
           Categoria: data['categoria'],
         );
       }).toList();
@@ -46,6 +51,14 @@ class _ItemBarState extends State<ItemBar> {
         isLoading = false;
       });
     }
+  }
+
+  double calculateAverageRating(Map<dynamic, dynamic> valutazioneMap) {
+    List<int> ratings = valutazioneMap.values
+        .map<int>((value) => value['valutazione'] as int)
+        .toList();
+    double sum = ratings.reduce((a, b) => a + b).toDouble();
+    return sum / ratings.length;
   }
 
   void scannerOn() async {
@@ -148,7 +161,7 @@ class _ItemBarState extends State<ItemBar> {
                             product.Valutazione != 0
                                 ? Row(
                               children: [
-                                Text('${product.Valutazione}'),
+                                Text('${product.Valutazione.toStringAsFixed(2)}'),
                                 const Icon(Icons.star, color: Colors.amber),
                               ],
                             )
@@ -171,7 +184,7 @@ class Prodotto {
   final int Barcode;
   final String Nome;
   final String Marca;
-  final int Valutazione;
+  final double Valutazione;
   final String Categoria;
 
   Prodotto({

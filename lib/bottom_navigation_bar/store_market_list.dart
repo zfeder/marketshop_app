@@ -48,6 +48,28 @@ class _SupermarketListState extends State<SupermarketList> {
 
   // Ottiene la posizione attuale dell'utente
   void getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Controlla se il servizio di localizzazione è abilitato
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Il servizio di localizzazione non è abilitato, mostra un messaggio all'utente o richiedi l'attivazione
+      return;
+    }
+
+    // Controlla lo stato dell'autorizzazione alla posizione
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      // L'autorizzazione alla posizione è stata negata in precedenza, richiedi l'autorizzazione all'utente
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
+        // L'utente ha rifiutato l'autorizzazione alla posizione, mostra un messaggio o gestisci il caso di mancata autorizzazione
+        return;
+      }
+    }
+
     try {
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
@@ -153,7 +175,7 @@ class _SupermarketListState extends State<SupermarketList> {
 
   // Effettua la richiesta API per ottenere la lista dei supermercati nelle vicinanze
   Future<List<dynamic>> fetchSupermarkets(double lat, double lng) async {
-    const apiKey = 'AIzaSyCKaqCw4qaOftjTRAZshAoihVZDJiDeYMI'; // Replace with your Google Places API key
+    const apiKey = 'AIzaSyCKaqCw4qaOftjTRAZshAoihVZDJiDeYMI';
 
     final url =
         'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$lat,$lng&radius=2000&type=supermarket&key=$apiKey';
@@ -166,16 +188,6 @@ class _SupermarketListState extends State<SupermarketList> {
       if (data['status'] == 'OK') {
         List<dynamic> results = data['results'];
 
-        List<String> allowedNames = [
-          'carrefour',
-          'crai',
-          'lidl',
-          'eurospin',
-          'despar',
-          "in's"
-        ];
-
-        // Filter the results based on the allowed names (case-insensitive)
         List<dynamic> filteredResults = results.where((result) {
           String name = result['name'].toLowerCase();
           return allowedNames.any((allowedName) => name.contains(allowedName));
