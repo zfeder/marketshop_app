@@ -4,8 +4,6 @@ import 'dart:core';
 
 import 'package:marketshop_app/bottom_navigation_bar/product_price.dart';
 
-
-
 class ProductListMarket extends StatefulWidget {
   final String supermarketName;
   const ProductListMarket(this.supermarketName, {Key? key}) : super(key: key);
@@ -78,9 +76,6 @@ class _ProductListMarketState extends State<ProductListMarket> {
     }
   }
 
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,54 +92,57 @@ class _ProductListMarketState extends State<ProductListMarket> {
           color: Colors.white,
         ),
       ),
-
-      body: Center(
-        child: isLoading
-            ? null // Rimuove il CircularProgressIndicator
-            : ListView.builder(
-          itemCount: prodotto.length,
-          itemBuilder: (context, index) {
-            final product = prodotto[index];
-            return ListTile(
-              title: Text(product.Nome),
-              subtitle: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Marca: ${product.Marca}'),
-                      Text('Prezzo: ${product.Prezzo}'),
-                    ],
-                  ),
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: product.Valutazione != 0
-                          ? Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text('${product.Valutazione}'),
-                          Icon(Icons.star, color: Colors.amber),
-                        ],
-                      )
-                          : Text('Nessuna valutazione'),
+      body: Column(
+        children: [
+          SizedBox(height: 16), // Aggiunge uno spazio vuoto di 16 pixel
+          Expanded(
+            child: Center(
+              child: isLoading
+                  ? null // Rimuove il CircularProgressIndicator
+                  : ListView.builder(
+                itemCount: prodotto.length,
+                itemBuilder: (context, index) {
+                  final product = prodotto[index];
+                  return ListTile(
+                    title: Text(product.Nome),
+                    subtitle: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Marca: ${product.Marca}'),
+                            Text('Prezzo: ${product.Prezzo}'),
+                          ],
+                        ),
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: product.Valutazione != 0
+                                ? Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('${product.Valutazione}'),
+                                Icon(Icons.star, color: Colors.amber),
+                              ],
+                            )
+                                : Text('Nessuna valutazione'),
+                          ),
+                        ),
+                        TextButton(
+                          child: const Text('Altri prezzi'),
+                          onPressed: () {
+                            backToOtherPrice(product.Barcode);
+                          },
+                        ),
+                      ],
                     ),
-                  ),
-                  TextButton(
-                    child: const Text('Altri prezzi'),
-                    onPressed: () {
-                      backToOtherPrice(product.Barcode);
-                    },
-                  ),
-                ],
+                  );
+                },
               ),
-            );
-          },
-        ),
-
-
-
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -50,7 +50,6 @@ class _ShoppingCartState extends State<ShoppingCart> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Prodotto rimosso'),
           content: const Text('Il prodotto è stato rimosso dal carrello.'),
           actions: [
             TextButton(
@@ -58,6 +57,9 @@ class _ShoppingCartState extends State<ShoppingCart> {
                 Navigator.of(context).pop(); // Chiudi il dialog
               },
               child: const Text('OK'),
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.green),
+              ),
             ),
           ],
         );
@@ -107,9 +109,9 @@ class _ShoppingCartState extends State<ShoppingCart> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('${product.Supermercato}'),
+                          Text('Quantità: ${product.Quantita}'),
                           Text('Prezzo totale: ${product.Prezzo * product.Quantita}€'),
                           Text('Prezzo per articolo: ${product.Prezzo}€'),
-                          Text('Quantità: ${product.Quantita}'),
                         ],
                       ),
                       trailing: Column(
@@ -122,6 +124,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                               padding: MaterialStateProperty.all<EdgeInsets>(
                                 const EdgeInsets.symmetric(horizontal: 8),
                               ),
+                              foregroundColor: MaterialStateProperty.all<Color>(Colors.green),
                             ),
                           ),
                         ],

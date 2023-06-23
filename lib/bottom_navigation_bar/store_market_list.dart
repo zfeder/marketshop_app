@@ -40,7 +40,6 @@ class _SupermarketListState extends State<SupermarketList> {
     "in's"
   ];
 
-
   @override
   void initState() {
     super.initState();
@@ -90,41 +89,50 @@ class _SupermarketListState extends State<SupermarketList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.builder(
-        itemCount: supermarkets.length,
-        itemBuilder: (context, index) {
-          final supermarket = supermarkets[index];
-          final distanceInMeters = supermarket['distance'];
+      body: Column(
+        children: [
+          const SizedBox(height: 16), // Aggiunge uno spazio vuoto di 16 pixel
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: ListView.builder(
+                itemCount: supermarkets.length,
+                itemBuilder: (context, index) {
+                  final supermarket = supermarkets[index];
+                  final distanceInMeters = supermarket['distance'];
 
-          String distanceText;
-          if (distanceInMeters < 1000) {
-            distanceText = '${distanceInMeters.toStringAsFixed(0)} m';
-          } else {
-            final distanceInKm = distanceInMeters / 1000;
-            distanceText = '${distanceInKm.toStringAsFixed(1)} km';
-          }
-
-          return InkWell(
-            onTap: () {
-              goToProductListMarket(supermarket['name']);
-              // Esegui azioni quando l'elemento viene cliccato
-              print('Hai cliccato su ${supermarket['name']}');
-            },
-            child: ListTile(
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(supermarket['name']),
-                  Text(
-                    supermarket['vicinity'],
-                    style: const TextStyle(color: Colors.grey),
-                  ),
-                ],
+                  String distanceText;
+                  if (distanceInMeters < 1000) {
+                    distanceText = '${distanceInMeters.toStringAsFixed(0)} m';
+                  } else {
+                    final distanceInKm = distanceInMeters / 1000;
+                    distanceText = '${distanceInKm.toStringAsFixed(1)} km';
+                  }
+                  return InkWell(
+                    onTap: () {
+                      goToProductListMarket(supermarket['name']);
+                      // Esegui azioni quando l'elemento viene cliccato
+                      print('Hai cliccato su ${supermarket['name']}');
+                    },
+                    child: ListTile(
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(supermarket['name']),
+                          Text(
+                            supermarket['vicinity'],
+                            style: const TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                      trailing: Text(distanceText),
+                    ),
+                  );
+                },
               ),
-              trailing: Text(distanceText),
             ),
-          );
-        },
+          ),
+        ],
       ),
     );
   }
@@ -143,7 +151,7 @@ class _SupermarketListState extends State<SupermarketList> {
     );
   }
 
-// Effettua la richiesta API per ottenere la lista dei supermercati nelle vicinanze
+  // Effettua la richiesta API per ottenere la lista dei supermercati nelle vicinanze
   Future<List<dynamic>> fetchSupermarkets(double lat, double lng) async {
     const apiKey = 'AIzaSyCKaqCw4qaOftjTRAZshAoihVZDJiDeYMI'; // Replace with your Google Places API key
 
@@ -181,5 +189,4 @@ class _SupermarketListState extends State<SupermarketList> {
       throw Exception('API request error: ${response.statusCode}');
     }
   }
-
 }

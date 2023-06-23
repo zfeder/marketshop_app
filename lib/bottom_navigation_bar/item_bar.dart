@@ -1,6 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:marketshop_app/bottom_navigation_bar/product_list_market.dart';
 import 'package:marketshop_app/bottom_navigation_bar/product_price.dart';
 import 'package:marketshop_app/bottom_navigation_bar/scanner_code.dart';
 
