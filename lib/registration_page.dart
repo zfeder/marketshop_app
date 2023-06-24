@@ -5,6 +5,7 @@ import 'package:marketshop_app/login_page.dart';
 import 'components_login/button.dart';
 import 'components_login/button_register.dart';
 import 'components_login/button_textfield.dart';
+import 'home_page.dart';
 
 class RegPage extends StatefulWidget {
   const RegPage({super.key});
@@ -19,23 +20,34 @@ class _RegPage extends State<RegPage> {
 
   // sign user in method
   void signUserIn() async {
-
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
       );
-      AutPage();
+
+      // Registrazione completata con successo, puoi eseguire le azioni desiderate qui
+      // Ad esempio, puoi navigare a una nuova pagina o mostrare un messaggio di successo
+
+      print('Registrazione completata con successo!');
+
+      // Esempio di navigazione a una nuova pagina dopo la registrazione
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AuthPage()),
+      );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+        print('La password fornita è troppo debole.');
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        print('L\'account esiste già per quell\'indirizzo email.');
       }
     } catch (e) {
       print(e);
     }
   }
+
 
   void LogPage() async {
     showDialog(
@@ -64,7 +76,7 @@ class _RegPage extends State<RegPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Center(
           child: Column(
@@ -74,44 +86,78 @@ class _RegPage extends State<RegPage> {
               // logo
               const Icon(
                 Icons.account_circle,
-                size: 100,
+                size: 50,
+                color: Colors.green,
               ),
+              const SizedBox(height: 10),
 
-
-              // welcome back, you've been missed!
-              Text(
-                'Welcome new User!',
-                style: TextStyle(
-                  color: Colors.grey[700],
-                  fontSize: 16,
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                child: TextField(
+                  controller: emailController,
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        width: 2,
+                        color: Colors.green,
+                      ),
+                    ),
+                  ),
                 ),
               ),
 
-              const SizedBox(height: 25),
-
-              // email textfield
-              MyTextField(
-                controller: emailController,
-                hintText: 'Email',
-                obscureText: false,
+// password textfield
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                child: TextField(
+                  obscureText: true,
+                  controller: passwordController,
+                  decoration: const InputDecoration(
+                    labelText: 'Password',
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        width: 2,
+                        color: Colors.green,
+                      ),
+                    ),
+                  ),
+                ),
               ),
 
-
-              // password textfield
-              MyTextField(
-                controller: passwordController,
-                hintText: 'Password',
-                obscureText: true,
-              ),
-
+              const SizedBox(height: 10),
 
               // sign in button
-              MyButtonReg(
-                onTap: signUserIn,
+              ElevatedButton(
+                onPressed: () {
+                  signUserIn();
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
+                ),
+                child: const Text('Registrati'),
               ),
 
-
-              // or continue with
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Row(
@@ -126,7 +172,7 @@ class _RegPage extends State<RegPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10.0),
                       child: Text(
-                        'Or continue with',
+                        'oppure continua con',
                         style: TextStyle(color: Colors.grey[700]),
                       ),
                     ),
@@ -139,19 +185,22 @@ class _RegPage extends State<RegPage> {
                   ],
                 ),
               ),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-              ),
-
+              // not a member? register now
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Already a member?',
+                    'Gia un utente?',
                     style: TextStyle(color: Colors.grey[700]),
                   ),
-                  MyButton(
-                    onTap: LogPage,
+                  TextButton(
+                    onPressed: AutPage,
+                    child: const Text(
+                      'Login',
+                      style: TextStyle(
+                        color: Colors.green,
+                      ),
+                    ),
                   ),
                 ],
               )
@@ -161,5 +210,4 @@ class _RegPage extends State<RegPage> {
       ),
     );
   }
-// prova commit
 }
