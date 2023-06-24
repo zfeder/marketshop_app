@@ -94,11 +94,12 @@ class _FoundCodeScreenState extends State<FoundCodeScreen> {
         centerTitle: true,
         leading: IconButton(
           onPressed: () {
-            widget.screenClosed();
+            widget.screenClosed?.call();
             Navigator.pop(context);
           },
-          icon: const Icon(Icons.arrow_back_outlined,),
+          icon: const Icon(Icons.arrow_back_outlined),
         ),
+
       ),
       body: Center(
         child: Padding(
