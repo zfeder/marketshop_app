@@ -80,19 +80,26 @@ class _ProductPriceState extends State<ProductPrice> {
       Map<dynamic, dynamic> dataMap = showData;
       List<dynamic> keyList = dataMap.keys.toList();
 
-      prodotto = keyList.map<Prodotto>((key) {
+      prodotto = keyList.expand<Prodotto>((key) {
         final data = dataMap[key];
-        nomeProd = data['nome'];
-        return Prodotto(
-          nome: data['nome'],
-          Barcode: barcode,
-          Marca: data['marca'],
-          Supermercato: data['supermercato'],
-          Categoria : data['categoria'],
-          Prezzo: data['prezzo'].toDouble(), // Modifica per convertire il valore in double
-          Quantita: 0,
-          Valutazione: data.containsKey('rating') ? data['rating'].toDouble() : 0.0,
-        );
+        if (data is Map<dynamic, dynamic>) {
+          if (data['prezzo'] != null && data['nome'] != null && data['marca'] != null) {
+            nomeProd = data['nome'];
+            return [
+              Prodotto(
+                nome: data['nome'],
+                Barcode: barcode,
+                Marca: data['marca'],
+                Supermercato: data['supermercato'],
+                Categoria: data['categoria'],
+                Prezzo: data['prezzo'].toDouble(),
+                Quantita: 0,
+                Valutazione: data.containsKey('rating') ? data['rating'].toDouble() : 0.0,
+              )
+            ];
+          }
+        }
+        return [];
       }).toList();
 
       setState(() {
@@ -110,7 +117,44 @@ class _ProductPriceState extends State<ProductPrice> {
     }
   }
 
-  void saveRatingToFirebase(double valutazione) {
+  Future<double> getMediaValutazioniFromDatabase() async {
+    var value = FirebaseDatabase.instance.ref();
+
+    String barcodePath = 'barcode/';
+    var barcodeSnapshot = await value.child(barcodePath).once();
+    dynamic barcodeData = barcodeSnapshot.snapshot.value;
+
+    List<double> valutazioniList = [];
+    int valutazioniCount = 0;
+
+    if (barcodeData != null && barcodeData is Map<dynamic, dynamic>) {
+      barcodeData.forEach((categoria, categoriaData) {
+        categoriaData.forEach((barcode, prodotto) {
+          dynamic valutazioneData = prodotto['valutazione'];
+          if (valutazioneData != null && valutazioneData is Map<dynamic, dynamic>) {
+            valutazioneData.forEach((userId, valutazione) {
+              double valutazioneValue = valutazione['valutazione'].toDouble();
+              valutazioniList.add(valutazioneValue);
+              valutazioniCount++;
+            });
+          }
+        });
+      });
+    }
+
+    double mediaValutazioni = 0.0;
+    if (valutazioniCount > 0) {
+      double sum = valutazioniList.reduce((a, b) => a + b);
+      mediaValutazioni = sum / valutazioniCount;
+    }
+
+    return mediaValutazioni;
+  }
+
+
+
+
+  Future<void> saveRatingToFirebase(double valutazione) async {
     DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
     String? uidUser = FirebaseAuth.instance.currentUser?.uid;
 
@@ -155,7 +199,17 @@ class _ProductPriceState extends State<ProductPrice> {
           },
         );
       });
+      double val = await getMediaValutazioniFromDatabase();
+      saveMediaValutazioneToDatabase(val, prodotto[0].Barcode);
     }
+  }
+
+  void saveMediaValutazioneToDatabase(double mediaValutazione, int barcode) {
+    DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
+
+    String barcodePath = 'supermercato/$barcode';
+
+    databaseRef.child(barcodePath).update({'valutazione': mediaValutazione});
   }
 
   void addProductPrice(int barcode, String productName, String brand, String category) {

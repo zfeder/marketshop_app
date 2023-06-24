@@ -35,6 +35,20 @@ class _ProductListMarketState extends State<ProductListMarket> {
     );
   }
 
+  Future<double> getValutazioneFromDatabase(int barcode) async {
+    var value = FirebaseDatabase.instance.ref();
+    String barcodePath = 'supermercato/$barcode/valutazione';
+    var getValue = await value.child(barcodePath).once();
+    dynamic showData = getValue.snapshot.value;
+
+    if (showData != null) {
+      double valutazioneData = showData.toDouble();
+      return valutazioneData;
+    }
+
+    return 0.0; // Valutazione predefinita se non presente nel database
+  }
+
   Future<void> getDataFromDatabase() async {
     var value = FirebaseDatabase.instance.ref();
 
@@ -57,17 +71,26 @@ class _ProductListMarketState extends State<ProductListMarket> {
         });
       });
 
-      List<Prodotto> prodotti = keyList.map<Prodotto>((key) {
-        final data = valueList[keyList.indexOf(key)];
-        return Prodotto(
-          Barcode: data['barcode'],
-          Nome: data['nome'],
-          Categoria: data['categoria'],
-          Marca: data['marca'],
-          Prezzo: data['prezzo'].toDouble(),
-          Supermercato: data['supermercato'],
+      List<Prodotto> prodotti = [];
+
+      for (int i = 0; i < keyList.length; i++) {
+        final data = valueList[i];
+        int barcode = data['barcode'];
+
+        double valutazione = await getValutazioneFromDatabase(barcode);
+
+        prodotti.add(
+          Prodotto(
+            Barcode: barcode,
+            Nome: data['nome'],
+            Categoria: data['categoria'],
+            Marca: data['marca'],
+            Prezzo: data['prezzo'].toDouble(),
+            Supermercato: data['supermercato'],
+            Valutazione: valutazione,
+          ),
         );
-      }).toList();
+      }
 
       setState(() {
         prodotto = prodotti;
@@ -75,6 +98,7 @@ class _ProductListMarketState extends State<ProductListMarket> {
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

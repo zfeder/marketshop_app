@@ -110,8 +110,8 @@ class _ShoppingCartState extends State<ShoppingCart> {
                         children: [
                           Text('${product.Supermercato}'),
                           Text('Quantità: ${product.Quantita}'),
-                          Text('Prezzo totale: ${product.Prezzo * product.Quantita}€'),
-                          Text('Prezzo per articolo: ${product.Prezzo}€'),
+                          Text('Prezzo totale: ${(product.Prezzo * product.Quantita).toStringAsFixed(2)}€'),
+                          Text('Prezzo per articolo: ${product.Prezzo.toStringAsFixed(2)}€'),
                         ],
                       ),
                       trailing: Column(
