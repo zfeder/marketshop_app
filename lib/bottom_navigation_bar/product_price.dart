@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ class ProductPrice extends StatefulWidget {
 }
 
 class _ProductPriceState extends State<ProductPrice> {
+  bool isFavorite = false; // Track the state of the heart icon
   final itemController = TextEditingController();
   late List<Prodotto> prodotto = [];
   String nomeProd = '';
@@ -151,7 +153,97 @@ class _ProductPriceState extends State<ProductPrice> {
     return mediaValutazioni;
   }
 
+  void addFavourite() async {
+    DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
+    String? uidUser = FirebaseAuth.instance.currentUser?.uid;
 
+    if (uidUser != null) {
+      String path = 'preferiti/$uidUser/';
+      databaseReference.child(path).update({
+        'barcode': prodotto[0].Barcode,
+      }).then((_) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: const Text('Prodotto aggiunto ai preferiti.'),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Chiudi'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }).catchError((error) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Errore'),
+              content: const Text('Si è verificato un errore durante l aggiunta ai preferiti.'),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Chiudi'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      });
+    }
+  }
+
+  void removeFavourite() async {
+    DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
+    String? uidUser = FirebaseAuth.instance.currentUser?.uid;
+
+    if (uidUser != null) {
+      String path = 'preferiti/$uidUser/';
+      databaseReference.child(path).remove().then((_) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: const Text('Prodotto rimosso dai preferiti.'),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Chiudi'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }).catchError((error) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Errore'),
+              content: const Text('Si è verificato un errore durante la rimozione.'),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Chiudi'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      });
+    }
+  }
 
 
   Future<void> saveRatingToFirebase(double valutazione) async {
@@ -204,6 +296,34 @@ class _ProductPriceState extends State<ProductPrice> {
     }
   }
 
+  void checkFavourite() {
+    if(isFavorite == false) {
+      setState(() {
+        isFavorite = !isFavorite; // Toggle the favorite state
+      });
+      addFavourite();
+    } else {
+      setState(() {
+        isFavorite = !isFavorite; // Toggle the favorite state
+      });
+      removeFavourite();
+    }
+  }
+
+  void productCheckFavourite(int barcode) async {
+    DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
+    String? uidUser = FirebaseAuth.instance.currentUser?.uid;
+    String path = 'preferiti/$uidUser';
+    var snapshot = await databaseReference.child(path).orderByChild("barcode").equalTo(barcode.toString()).once();
+    dynamic data = snapshot.snapshot.value;
+
+    bool check = data != null;
+    isFavorite = check; // Return true if data exists, false otherwise
+    log('provaa');
+  }
+
+
+
   void saveMediaValutazioneToDatabase(double mediaValutazione, int barcode) {
     DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
 
@@ -226,6 +346,7 @@ class _ProductPriceState extends State<ProductPrice> {
   void initState() {
     super.initState();
     getDataFromDatabase(widget.productBarcode);
+    productCheckFavourite(widget.productBarcode);
   }
 
   @override
@@ -246,9 +367,18 @@ class _ProductPriceState extends State<ProductPrice> {
         actions: [
           IconButton(
             onPressed: () {
+              checkFavourite();
+            },
+            icon: Icon(
+              isFavorite ? Icons.favorite : Icons.favorite_border,
+              color: isFavorite ? Colors.white : null,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
               addProductPrice(prodotto[0].Barcode, prodotto[0].nome, prodotto[0].Marca, prodotto[0].Categoria);
             },
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
           ),
         ],
       ),
