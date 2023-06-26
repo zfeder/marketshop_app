@@ -167,6 +167,8 @@ class _ProductPriceState extends State<ProductPrice> {
       String path = 'preferiti/$uidUser/${widget.productBarcode}';
       databaseReference.child(path).update({
         'barcode': prodotto[0].Barcode,
+        'nome' : prodotto[0].nome,
+        'marca' : prodotto[0].Marca,
       }).then((_) {
         showDialog(
           context: context,

@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'favourite_product_list.dart';
+
 class AccountSettings extends StatefulWidget {
   const AccountSettings({Key? key});
 
@@ -11,6 +13,15 @@ class AccountSettings extends StatefulWidget {
 class _AccountSettingsState extends State<AccountSettings> {
   void signUserOut() {
     FirebaseAuth.instance.signOut();
+  }
+
+  void goToFavourite() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const FavouriteProductList(),
+      ),
+    );
   }
 
   void closeAccount() {
@@ -42,7 +53,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                       const SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: () {
-                          // Aggiungi qui la logica per gestire il tap del pulsante "Prodotti preferiti"
+                          goToFavourite();
                         },
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
