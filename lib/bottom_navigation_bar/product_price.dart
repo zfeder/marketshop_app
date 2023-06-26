@@ -24,12 +24,14 @@ class _ProductPriceState extends State<ProductPrice> {
   bool isPopupVisible = false;
   double rating = 0.0; // Valutazione iniziale
 
-  void addDataToFirebase(String nomeProdotto, double prezzo, int quantita, int barcode, String supermercato, String marca) {
+  void addDataToFirebase(String nomeProdotto, double prezzo, int quantita,
+      int barcode, String supermercato, String marca) {
     DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
     String? uidUser = FirebaseAuth.instance.currentUser?.uid;
 
     String carrello = 'carrello/$uidUser/$barcode';
-    String productNameLowercase = supermercato.toLowerCase().replaceAll(' ', '_');
+    String productNameLowercase = supermercato.toLowerCase().replaceAll(
+        ' ', '_');
     String path = carrello + productNameLowercase;
 
     databaseReference.child(path).set({
@@ -38,7 +40,7 @@ class _ProductPriceState extends State<ProductPrice> {
       'nome': nomeProdotto,
       'quantità': quantita,
       'marca': marca,
-      'barcode' : barcode,
+      'barcode': barcode,
     }).then((_) {
       setState(() {
         isPopupVisible = true;
@@ -55,7 +57,8 @@ class _ProductPriceState extends State<ProductPrice> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Errore'),
-            content: const Text('Si è verificato un errore durante l\'aggiunta del prodotto al carrello.'),
+            content: const Text(
+                'Si è verificato un errore durante l\'aggiunta del prodotto al carrello.'),
             actions: <Widget>[
               TextButton(
                 child: const Text('Chiudi'),
@@ -85,7 +88,8 @@ class _ProductPriceState extends State<ProductPrice> {
       prodotto = keyList.expand<Prodotto>((key) {
         final data = dataMap[key];
         if (data is Map<dynamic, dynamic>) {
-          if (data['prezzo'] != null && data['nome'] != null && data['marca'] != null) {
+          if (data['prezzo'] != null && data['nome'] != null &&
+              data['marca'] != null) {
             nomeProd = data['nome'];
             return [
               Prodotto(
@@ -96,7 +100,8 @@ class _ProductPriceState extends State<ProductPrice> {
                 Categoria: data['categoria'],
                 Prezzo: data['prezzo'].toDouble(),
                 Quantita: 0,
-                Valutazione: data.containsKey('rating') ? data['rating'].toDouble() : 0.0,
+                Valutazione: data.containsKey('rating') ? data['rating']
+                    .toDouble() : 0.0,
               )
             ];
           }
@@ -133,7 +138,8 @@ class _ProductPriceState extends State<ProductPrice> {
       barcodeData.forEach((categoria, categoriaData) {
         categoriaData.forEach((barcode, prodotto) {
           dynamic valutazioneData = prodotto['valutazione'];
-          if (valutazioneData != null && valutazioneData is Map<dynamic, dynamic>) {
+          if (valutazioneData != null &&
+              valutazioneData is Map<dynamic, dynamic>) {
             valutazioneData.forEach((userId, valutazione) {
               double valutazioneValue = valutazione['valutazione'].toDouble();
               valutazioniList.add(valutazioneValue);
@@ -158,7 +164,7 @@ class _ProductPriceState extends State<ProductPrice> {
     String? uidUser = FirebaseAuth.instance.currentUser?.uid;
 
     if (uidUser != null) {
-      String path = 'preferiti/$uidUser/';
+      String path = 'preferiti/$uidUser/${widget.productBarcode}';
       databaseReference.child(path).update({
         'barcode': prodotto[0].Barcode,
       }).then((_) {
@@ -184,7 +190,8 @@ class _ProductPriceState extends State<ProductPrice> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text('Errore'),
-              content: const Text('Si è verificato un errore durante l aggiunta ai preferiti.'),
+              content: const Text(
+                  'Si è verificato un errore durante l aggiunta ai preferiti.'),
               actions: <Widget>[
                 TextButton(
                   child: const Text('Chiudi'),
@@ -229,7 +236,8 @@ class _ProductPriceState extends State<ProductPrice> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text('Errore'),
-              content: const Text('Si è verificato un errore durante la rimozione.'),
+              content: const Text(
+                  'Si è verificato un errore durante la rimozione.'),
               actions: <Widget>[
                 TextButton(
                   child: const Text('Chiudi'),
@@ -251,7 +259,8 @@ class _ProductPriceState extends State<ProductPrice> {
     String? uidUser = FirebaseAuth.instance.currentUser?.uid;
 
     if (uidUser != null) {
-      String path = 'barcode/${prodotto[0].Categoria}/${prodotto[0].Barcode}/valutazione/$uidUser';
+      String path = 'barcode/${prodotto[0].Categoria}/${prodotto[0]
+          .Barcode}/valutazione/$uidUser';
       databaseReference.child(path).update({
         'valutazione': valutazione,
       }).then((_) {
@@ -278,7 +287,8 @@ class _ProductPriceState extends State<ProductPrice> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text('Errore'),
-              content: const Text('Si è verificato un errore durante il salvataggio della valutazione.'),
+              content: const Text(
+                  'Si è verificato un errore durante il salvataggio della valutazione.'),
               actions: <Widget>[
                 TextButton(
                   child: const Text('Chiudi'),
@@ -297,7 +307,7 @@ class _ProductPriceState extends State<ProductPrice> {
   }
 
   void checkFavourite() {
-    if(isFavorite == false) {
+    if (isFavorite == false) {
       setState(() {
         isFavorite = !isFavorite; // Toggle the favorite state
       });
@@ -310,18 +320,29 @@ class _ProductPriceState extends State<ProductPrice> {
     }
   }
 
-  void productCheckFavourite(int barcode) async {
-    DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
+
+  void productCheckFavourite() async {
+    final databaseReference = FirebaseDatabase.instance.reference();
     String? uidUser = FirebaseAuth.instance.currentUser?.uid;
-    String path = 'preferiti/$uidUser';
-    var snapshot = await databaseReference.child(path).orderByChild("barcode").equalTo(barcode.toString()).once();
-    dynamic data = snapshot.snapshot.value;
+    String barcodeValue = "";
+    String path = '/preferiti/$uidUser/${widget.productBarcode}';
 
-    bool check = data != null;
-    isFavorite = check; // Return true if data exists, false otherwise
-    log('provaa');
+    DataSnapshot? snapshot;
+    await databaseReference
+        .child(path)
+        .once()
+        .then((snapshotData) {
+      snapshot = snapshotData.snapshot;
+    });
+
+    if (snapshot != null && snapshot!.value != null) {
+      barcodeValue = snapshot!.value.toString();
+      isFavorite = true;
+    } else {
+      barcodeValue = "Barcode non trovato";
+      isFavorite = false;
+    }
   }
-
 
 
   void saveMediaValutazioneToDatabase(double mediaValutazione, int barcode) {
@@ -346,7 +367,7 @@ class _ProductPriceState extends State<ProductPrice> {
   void initState() {
     super.initState();
     getDataFromDatabase(widget.productBarcode);
-    productCheckFavourite(widget.productBarcode);
+    productCheckFavourite();
   }
 
   @override
