@@ -54,6 +54,7 @@ class _AddProductDatabaseState extends State<AddProductDatabase> {
     DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
     String barcode = 'barcode/$category/${widget.productBarcode}';
     String supermercato = 'supermercato/${widget.productBarcode}';
+    String valutazione = '$barcode/valutazione/def';
 
     databaseReference.child(supermercato).set({
     });
@@ -62,7 +63,6 @@ class _AddProductDatabaseState extends State<AddProductDatabase> {
       'barcode': widget.productBarcode,
       'nome': productName,
       'marca': brand,
-      'valutazione': 0,
       'categoria': category,
     }).then((_) {
       showDialog(
@@ -114,6 +114,9 @@ class _AddProductDatabaseState extends State<AddProductDatabase> {
       );
     });
 
+    databaseReference.child(valutazione).set({
+      'valutazione' : 0
+    });
 
 
   }

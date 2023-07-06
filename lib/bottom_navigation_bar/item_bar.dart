@@ -56,10 +56,18 @@ class _ItemBarState extends State<ItemBar> {
   double calculateAverageRating(Map<dynamic, dynamic> valutazioneMap) {
     List<int> ratings = valutazioneMap.values
         .map<int>((value) => value['valutazione'] as int)
+        .where((rating) => rating != 0)
         .toList();
+
+    if (ratings.isEmpty) {
+      return 0.0;
+    }
+
     double sum = ratings.reduce((a, b) => a + b).toDouble();
     return sum / ratings.length;
   }
+
+
 
   void scannerOn() async {
     final String? scannedValue = await Navigator.push(

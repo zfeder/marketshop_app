@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "464372108399-8l26v37q3djn5t49pb57b6no8tp1bq07.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.marketshop_app",
+            "certificate_hash": "0582772e83b2d93af20845ea8a6d19bb222cca97"
+          }
+        },
+        {
           "client_id": "464372108399-ulj296igt8k7m6d8ipdsirujt3ca000r.apps.googleusercontent.com",
           "client_type": 3
         }
