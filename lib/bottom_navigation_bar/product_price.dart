@@ -142,8 +142,10 @@ class _ProductPriceState extends State<ProductPrice> {
               valutazioneData is Map<dynamic, dynamic>) {
             valutazioneData.forEach((userId, valutazione) {
               double valutazioneValue = valutazione['valutazione'].toDouble();
-              valutazioniList.add(valutazioneValue);
-              valutazioniCount++;
+              if (valutazioneValue != 0) {
+                valutazioniList.add(valutazioneValue);
+                valutazioniCount++;
+              }
             });
           }
         });
@@ -158,6 +160,7 @@ class _ProductPriceState extends State<ProductPrice> {
 
     return mediaValutazioni;
   }
+
 
   void addFavourite() async {
     DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
