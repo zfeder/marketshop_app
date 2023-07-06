@@ -5,10 +5,10 @@ class ScannerCode extends StatefulWidget {
   const ScannerCode({Key? key}) : super(key: key);
 
   @override
-  State<ScannerCode> createState() => _ScannerCode();
+  State<ScannerCode> createState() => _ScannerCodeState();
 }
 
-class _ScannerCode extends State<ScannerCode> {
+class _ScannerCodeState extends State<ScannerCode> {
   MobileScannerController cameraController = MobileScannerController();
   bool _screenOpened = false;
 
@@ -69,16 +69,16 @@ class _ScannerCode extends State<ScannerCode> {
       Navigator.pop(context, code);
     }
   }
-
 }
 
 class FoundCodeScreen extends StatefulWidget {
   final String value;
-  final Function() screenClosed;
+  final Function(BuildContext)? screenClosed;
+
   const FoundCodeScreen({
     Key? key,
     required this.value,
-    required this.screenClosed,
+    this.screenClosed,
   }) : super(key: key);
 
   @override
@@ -94,12 +94,11 @@ class _FoundCodeScreenState extends State<FoundCodeScreen> {
         centerTitle: true,
         leading: IconButton(
           onPressed: () {
-            widget.screenClosed?.call();
+            widget.screenClosed?.call(context);
             Navigator.pop(context);
           },
           icon: const Icon(Icons.arrow_back_outlined),
         ),
-
       ),
       body: Center(
         child: Padding(
@@ -107,9 +106,12 @@ class _FoundCodeScreenState extends State<FoundCodeScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text("Scanned Code:", style: TextStyle(fontSize: 20,),),
+              const Text(
+                "Scanned Code:",
+                style: TextStyle(fontSize: 20,),
+              ),
               const SizedBox(height: 20,),
-              Text(widget.value, style: const TextStyle(fontSize: 16,),),
+              Text(widget.value ?? 'N/A', style: const TextStyle(fontSize: 16,),),
             ],
           ),
         ),

@@ -77,13 +77,16 @@ class _ItemBarState extends State<ItemBar> {
       ),
     );
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ProductPrice(int.parse(scannedValue!)),
-      ),
-    );
+    if (scannedValue != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProductPrice(int.parse(scannedValue)),
+        ),
+      );
+    }
   }
+
 
   void onTap(Prodotto product) {
     setState(() {

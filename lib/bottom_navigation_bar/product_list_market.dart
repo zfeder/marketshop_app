@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'dart:core';
 
+
 import 'package:marketshop_app/bottom_navigation_bar/product_price.dart';
 
 class ProductListMarket extends StatefulWidget {
@@ -140,18 +141,20 @@ class _ProductListMarketState extends State<ProductListMarket> {
                           ],
                         ),
                         Expanded(
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: product.Valutazione != 0
-                                ? Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text('${product.Valutazione}'),
-                                Icon(Icons.star, color: Colors.amber),
-                              ],
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: product.Valutazione != 0
+                                  ? Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    product.Valutazione.toStringAsFixed(2),
+                                  ),
+                                  Icon(Icons.star, color: Colors.amber),
+                                ],
+                              )
+                                  : Container(),
                             )
-                                : Text('Nessuna valutazione'),
-                          ),
                         ),
                         TextButton(
                           child: const Text('Altri prezzi'),

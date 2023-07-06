@@ -138,8 +138,7 @@ class _ProductPriceState extends State<ProductPrice> {
       barcodeData.forEach((categoria, categoriaData) {
         categoriaData.forEach((barcode, prodotto) {
           dynamic valutazioneData = prodotto['valutazione'];
-          if (valutazioneData != null &&
-              valutazioneData is Map<dynamic, dynamic>) {
+          if (valutazioneData != null && valutazioneData is Map<dynamic, dynamic>) {
             valutazioneData.forEach((userId, valutazione) {
               double valutazioneValue = valutazione['valutazione'].toDouble();
               if (valutazioneValue != 0) {
@@ -160,6 +159,7 @@ class _ProductPriceState extends State<ProductPrice> {
 
     return mediaValutazioni;
   }
+
 
 
   void addFavourite() async {
