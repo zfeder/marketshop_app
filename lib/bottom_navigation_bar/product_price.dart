@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -166,150 +165,144 @@ class _ProductPriceState extends State<ProductPrice> {
     DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
     String? uidUser = FirebaseAuth.instance.currentUser?.uid;
 
-    if (uidUser != null) {
-      String path = 'preferiti/$uidUser/${widget.productBarcode}';
-      databaseReference.child(path).update({
-        'barcode': prodotto[0].Barcode,
-        'nome' : prodotto[0].nome,
-        'marca' : prodotto[0].Marca,
-      }).then((_) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              content: const Text('Prodotto aggiunto ai preferiti.'),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('Chiudi'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      }).catchError((error) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Errore'),
-              content: const Text(
-                  'Si è verificato un errore durante l aggiunta ai preferiti.'),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('Chiudi'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      });
+    String path = 'preferiti/$uidUser/${widget.productBarcode}';
+    databaseReference.child(path).update({
+      'barcode': prodotto[0].Barcode,
+      'nome' : prodotto[0].nome,
+      'marca' : prodotto[0].Marca,
+    }).then((_) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: const Text('Prodotto aggiunto ai preferiti.'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Chiudi'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }).catchError((error) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Errore'),
+            content: const Text(
+                'Si è verificato un errore durante l aggiunta ai preferiti.'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Chiudi'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    });
     }
-  }
 
   void removeFavourite() async {
     DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
     String? uidUser = FirebaseAuth.instance.currentUser?.uid;
 
-    if (uidUser != null) {
-      String path = 'preferiti/$uidUser/';
-      databaseReference.child(path).remove().then((_) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              content: const Text('Prodotto rimosso dai preferiti.'),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('Chiudi'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      }).catchError((error) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Errore'),
-              content: const Text(
-                  'Si è verificato un errore durante la rimozione.'),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('Chiudi'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      });
+    String path = 'preferiti/$uidUser/';
+    databaseReference.child(path).remove().then((_) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: const Text('Prodotto rimosso dai preferiti.'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Chiudi'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }).catchError((error) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Errore'),
+            content: const Text(
+                'Si è verificato un errore durante la rimozione.'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Chiudi'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    });
     }
-  }
 
 
   Future<void> saveRatingToFirebase(double valutazione) async {
     DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
     String? uidUser = FirebaseAuth.instance.currentUser?.uid;
 
-    if (uidUser != null) {
-      String path = 'barcode/${prodotto[0].Categoria}/${prodotto[0]
-          .Barcode}/valutazione/$uidUser';
-      databaseReference.child(path).update({
-        'valutazione': valutazione,
-      }).then((_) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Successo'),
-              content: const Text('Valutazione salvata con successo.'),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('Chiudi'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      }).catchError((error) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Errore'),
-              content: const Text(
-                  'Si è verificato un errore durante il salvataggio della valutazione.'),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('Chiudi'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      });
-      double val = await getMediaValutazioniFromDatabase();
-      saveMediaValutazioneToDatabase(val, prodotto[0].Barcode);
+    String path = 'barcode/${prodotto[0].Categoria}/${prodotto[0]
+        .Barcode}/valutazione/$uidUser';
+    databaseReference.child(path).update({
+      'valutazione': valutazione,
+    }).then((_) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Successo'),
+            content: const Text('Valutazione salvata con successo.'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Chiudi'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }).catchError((error) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Errore'),
+            content: const Text(
+                'Si è verificato un errore durante il salvataggio della valutazione.'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Chiudi'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    });
+    double val = await getMediaValutazioniFromDatabase();
+    saveMediaValutazioneToDatabase(val, prodotto[0].Barcode);
     }
-  }
 
   void checkFavourite() {
     if (isFavorite == false) {

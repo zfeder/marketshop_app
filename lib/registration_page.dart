@@ -2,10 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:marketshop_app/auth_page.dart';
 import 'package:marketshop_app/login_page.dart';
-import 'components_login/button.dart';
-import 'components_login/button_register.dart';
-import 'components_login/button_textfield.dart';
-import 'home_page.dart';
 
 class RegPage extends StatefulWidget {
   const RegPage({super.key});
